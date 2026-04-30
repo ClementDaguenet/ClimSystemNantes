@@ -1,0 +1,207 @@
+﻿@import "tailwindcss";
+
+/* Leaflet tiles & marker styles (chargé globalement pour la page /agences) */
+@import "leaflet/dist/leaflet.css";
+
+/**
+ * Identité visuelle Climsystem
+ * - Bleu froid (primaire) : inspiration logo, secteur génie climatique
+ * - Rouge dynamique (secondaire) : CTA, accents, urgence SAV
+ * - Gris très clair : fonds et sections, héritée du style catalogue ACR
+ */
+@theme {
+  --color-clim-blue-50: #eef6ff;
+  --color-clim-blue-100: #dbeafe;
+  --color-clim-blue-200: #bfdbfe;
+  --color-clim-blue-300: #93c5fd;
+  --color-clim-blue-400: #4f93e9;
+  --color-clim-blue-500: #1e6fd9;
+  --color-clim-blue-600: #1759b8;
+  --color-clim-blue-700: #114a96;
+  --color-clim-blue-800: #0d3a76;
+  --color-clim-blue-900: #0a2c5a;
+
+  --color-clim-red-50: #fef2f3;
+  --color-clim-red-100: #fee2e4;
+  --color-clim-red-400: #f04555;
+  --color-clim-red-500: #e11d2e;
+  --color-clim-red-600: #b8121f;
+  --color-clim-red-700: #931017;
+
+  --color-clim-bg: #f7f9fc;
+  --color-clim-surface: #ffffff;
+  --color-clim-ink: #0f172a;
+  --color-clim-muted: #475569;
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --shadow-soft: 0 6px 24px -8px rgb(15 23 42 / 0.08);
+  --shadow-card: 0 12px 40px -12px rgb(15 23 42 / 0.18);
+}
+
+/* Reset / base globale */
+html,
+body {
+  background: var(--color-clim-bg);
+  color: var(--color-clim-ink);
+}
+
+body {
+  font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI", Roboto,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Focus ring uniforme accessible (a11y) */
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-clim-blue-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Respect des préférences utilisateur (a11y) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Scroll fluide pour les ancres (#chauffage, etc.) */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* hauteur navbar sticky */
+}
+
+/* Animation marquee pour le carrousel de marques */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Fix pour les markers Leaflet dans Next.js */
+.leaflet-container {
+  font-family: inherit;
+}
+
+/* Pulsation très douce pour les badges "Siège social" / éléments mis en avant.
+   Discrète : 4s, opacity légère, désactivée par prefers-reduced-motion. */
+@keyframes hq-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(225 29 46 / 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgb(225 29 46 / 0);
+  }
+}
+.animate-hq-pulse {
+  animation: hq-pulse 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-hq-pulse {
+    animation: none;
+  }
+}
+
+/* Shimmer subtil sur le gradient du titre Hero — anime la position du gradient
+   pour un léger effet de reflet. Désactivé en reduced-motion. */
+@keyframes hero-shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+.animate-hero-shimmer {
+  background-size: 200% 100%;
+  animation: hero-shimmer 6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero-shimmer {
+    animation: none;
+  }
+}
+
+/* Typographie article pour les pages légales / RGPD */
+.legal-prose {
+  color: var(--color-clim-ink);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+.legal-prose h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--color-clim-blue-700);
+}
+.legal-prose h2:first-child {
+  margin-top: 0;
+}
+.legal-prose h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+.legal-prose p {
+  margin-bottom: 1rem;
+  color: var(--color-clim-muted);
+}
+.legal-prose ul {
+  margin-bottom: 1rem;
+  padding-left: 1.25rem;
+  list-style: disc;
+  color: var(--color-clim-muted);
+}
+.legal-prose ul li {
+  margin-bottom: 0.5rem;
+}
+.legal-prose a {
+  color: var(--color-clim-blue-700);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 500;
+}
+.legal-prose a:hover {
+  color: var(--color-clim-red-500);
+}
+.legal-prose strong {
+  color: var(--color-clim-ink);
+  font-weight: 600;
+}
+.legal-prose .definitions {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.5rem;
+}
+.legal-prose .definitions > div {
+  padding: 0.75rem 1rem;
+  background: var(--color-clim-bg);
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-clim-blue-100);
+}

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 256" role="img" aria-label="Climsystem Distribution Atlantique">
+  <!--
+    Variante "light" du logo : sous-titre "Distribution Atlantique" en blanc
+    pour s'inscrire correctement sur fond sombre (Footer).
+    Le bloc emblème reste fidèle à l'original (rouge + bleu).
+  -->
+
+  <g>
+    <path d="M 0 12 H 100 V 244 H 12 a12 12 0 0 1 -12 -12 V 12 a12 12 0 0 1 12 -12 Z" fill="#e11d2e"/>
+    <path d="M 100 12 H 220 a12 12 0 0 1 12 12 V 232 a12 12 0 0 1 -12 12 H 100 V 12 Z" fill="#1e6fd9"/>
+
+    <g fill="white" stroke="white" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="46" y="50" width="20" height="115" rx="10" stroke-width="6" fill="none"/>
+      <circle cx="56" cy="180" r="22" fill="white" stroke="none"/>
+      <rect x="52" y="80" width="8" height="100" fill="white" stroke="none" rx="4"/>
+      <line x1="32" y1="76" x2="42" y2="76" stroke-width="5"/>
+      <line x1="32" y1="100" x2="42" y2="100" stroke-width="5"/>
+      <line x1="32" y1="124" x2="42" y2="124" stroke-width="5"/>
+    </g>
+
+    <g fill="none" stroke="white" stroke-width="6" stroke-linejoin="round">
+      <path d="M 166 60 C 132 110 124 142 124 168 a 42 42 0 0 0 84 0 C 208 142 200 110 166 60 Z"/>
+      <path d="M 145 165 a 18 22 0 0 0 18 22" stroke-width="5" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <g font-family="'Arial Black', 'Helvetica Neue', sans-serif" font-weight="900" font-size="120" letter-spacing="-2">
+    <text x="252" y="135" fill="#ffffff">CLIM</text>
+    <text x="510" y="135" fill="#ff5566">SYSTEM</text>
+  </g>
+
+  <g font-family="'Arial Black', 'Helvetica Neue', sans-serif" font-weight="800" font-size="46" letter-spacing="3">
+    <text x="252" y="208" fill="#ffffff" opacity="0.9">DISTRIBUTION ATLANTIQUE</text>
+  </g>
+</svg>

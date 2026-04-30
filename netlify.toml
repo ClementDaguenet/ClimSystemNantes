@@ -1,0 +1,12 @@
+﻿# Déploiement Next.js via OpenNext (@netlify/plugin-nextjs)
+# https://docs.netlify.com/integrations/frameworks/next-js/overview/
+
+[build]
+  publish = ".next"
+  command = "npx prisma migrate deploy && npm run build"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

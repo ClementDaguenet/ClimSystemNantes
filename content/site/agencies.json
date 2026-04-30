@@ -1,0 +1,54 @@
+{
+  "items": [
+    {
+      "id": "nantes",
+      "name": "Climsystem Distribution Atlantique - Nantes",
+      "city": "Nantes",
+      "address": "12 rue du Génie Climatique",
+      "postalCode": "44000",
+      "phone": "02 40 00 00 00",
+      "email": "nantes@climsystem.fr",
+      "hours": "Lun-Ven : 8h-12h / 14h-18h",
+      "latitude": 47.2184,
+      "longitude": -1.5536,
+      "isFeatured": true,
+      "tagline": "Bureau d'études, équipe technique et dépôt : votre interlocuteur privilégié pour l'Ouest et la façade atlantique."
+    },
+    {
+      "id": "chatillon",
+      "name": "Climsystem - Châtillon",
+      "city": "Châtillon",
+      "address": "À compléter",
+      "postalCode": "92320",
+      "phone": "01 00 00 00 00",
+      "email": "chatillon@climsystem.fr",
+      "hours": "Lun-Ven : 8h-12h / 14h-18h",
+      "latitude": 48.8019,
+      "longitude": 2.2891
+    },
+    {
+      "id": "tours",
+      "name": "Climsystem - Tours",
+      "city": "Tours",
+      "address": "À compléter",
+      "postalCode": "37000",
+      "phone": "02 47 00 00 00",
+      "email": "tours@climsystem.fr",
+      "hours": "Lun-Ven : 8h-12h / 14h-18h",
+      "latitude": 47.3941,
+      "longitude": 0.6848
+    },
+    {
+      "id": "aubagne",
+      "name": "Climsystem - Aubagne",
+      "city": "Aubagne",
+      "address": "À compléter",
+      "postalCode": "13400",
+      "phone": "04 42 00 00 00",
+      "email": "aubagne@climsystem.fr",
+      "hours": "Lun-Ven : 8h-12h / 14h-18h",
+      "latitude": 43.2924,
+      "longitude": 5.5658
+    }
+  ]
+}

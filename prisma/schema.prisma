@@ -1,0 +1,47 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Agency {
+  id          String  @id
+  name        String
+  city        String
+  address     String
+  postalCode  String
+  phone       String
+  email       String
+  hours       String
+  latitude    Float
+  longitude   Float
+  isFeatured  Boolean @default(false)
+  tagline     String?
+  sortOrder   Int     @default(0)
+
+  @@map("agencies")
+}
+
+model SiteSettings {
+  id            Int     @id @default(1)
+  footerIntro   String
+  savFlyerImage String
+  savFlyerPdf   String?
+  savImageAlt   String?
+
+  @@map("site_settings")
+}
+
+model ContentBlock {
+  key       String   @id
+  label     String
+  group     String
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+
+  @@map("content_blocks")
+}
