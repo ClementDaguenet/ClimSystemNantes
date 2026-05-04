@@ -9,6 +9,7 @@ import {
   websiteSchema,
 } from "@/lib/seo";
 import { getAgencies } from "@/lib/cms/loaders";
+import { getContents } from "@/lib/cms/content";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,10 +17,11 @@ const geistSans = Geist({
   display: "swap",
 });
 
-export const metadata: Metadata = {
+/** Métadonnées de base ; l’image Open Graph peut être surchargée depuis le CMS (`media.og.image_url`). */
+export const SITE_METADATA_STATIC: Metadata = {
   metadataBase: new URL("https://www.climsystem.fr"),
   title: {
-    default: "Climsystem Distribution Atlantique — Génie climatique à Nantes",
+    default: "Climsystem Distribution Atlantique - Génie climatique à Nantes",
     template: "%s | Climsystem Distribution Atlantique",
   },
   description:
@@ -44,7 +46,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "fr_FR",
     siteName: "Climsystem Distribution Atlantique",
-    title: "Climsystem Distribution Atlantique — Génie climatique à Nantes",
+    title: "Climsystem Distribution Atlantique - Génie climatique à Nantes",
     description:
       "Distributeur indépendant en génie climatique. Première équipe à Nantes, relais à Châtillon, Tours et Aubagne.",
   },
@@ -56,11 +58,28 @@ export const metadata: Metadata = {
   },
   robots: { index: true, follow: true },
   icons: {
-    icon: [
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-    ],
+    icon: [{ url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" }],
   },
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const cms = await getContents(["media.og.image_url"]);
+  const ogUrl = cms["media.og.image_url"]?.trim();
+  /** Les data-URL ne sont pas des aperçus valables pour OG / crawlers réseaux sociaux */
+  if (!ogUrl || ogUrl.startsWith("data:")) return SITE_METADATA_STATIC;
+
+  const baseOg = SITE_METADATA_STATIC.openGraph;
+  const baseTw = SITE_METADATA_STATIC.twitter;
+
+  return {
+    ...SITE_METADATA_STATIC,
+    openGraph: baseOg ? { ...baseOg, images: [{ url: ogUrl }] } : undefined,
+    twitter:
+      typeof baseTw === "object"
+        ? { ...baseTw, images: [ogUrl] }
+        : baseTw,
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: "#1e6fd9",

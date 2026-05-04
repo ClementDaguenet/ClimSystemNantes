@@ -162,7 +162,7 @@ export default async function PolitiqueConfidentialitePage() {
         Si vous estimez, après nous avoir contactés, que vos droits sur vos
         données ne sont pas respectés, vous pouvez introduire une réclamation
         auprès de la Commission Nationale de l&apos;Informatique et des
-        Libertés (CNIL) — 3 Place de Fontenoy, 75007 Paris —{" "}
+        Libertés (CNIL) - 3 Place de Fontenoy, 75007 Paris -{" "}
         <a
           href="https://www.cnil.fr"
           target="_blank"

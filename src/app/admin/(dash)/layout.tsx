@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { requireAdminSession } from "@/lib/admin/session";
 import { adminLogoutAction } from "@/app/admin/actions";
 
@@ -15,6 +15,7 @@ export default async function AdminDashboardShell({
     { href: "/admin", label: "Vue d’ensemble" },
     { href: "/admin/agencies", label: "Agences" },
     { href: "/admin/parametres", label: "Paramètres site" },
+    { href: "/admin/medias", label: "Photos & médias" },
     { href: "/admin/textes", label: "Textes & contenus" },
   ];
 

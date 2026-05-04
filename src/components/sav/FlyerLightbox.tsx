@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Maximize2, X, Download } from "lucide-react";
 
 const DEFAULT_ALT =
-  "Flyer SAV Climsystem Distribution Atlantique — SAV toutes marques, réponse sous 24/48h";
+  "Flyer SAV Climsystem Distribution Atlantique - SAV toutes marques, réponse sous 24/48h";
 
 export type FlyerLightboxProps = {
   flyerImage: string;
@@ -23,7 +23,9 @@ export function FlyerLightbox({
 
   const pdfHref = flyerPdf?.trim();
   const unoptimized =
-    flyerImage.startsWith("/uploads") || /^https?:\/\//.test(flyerImage);
+    flyerImage.startsWith("/uploads") ||
+    flyerImage.startsWith("data:image/") ||
+    /^https?:\/\//.test(flyerImage);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -97,7 +99,7 @@ export function FlyerLightbox({
               onClick={(e) => e.stopPropagation()}
             >
               <h2 id="flyer-dialog-title" className="sr-only">
-                Flyer SAV Climsystem — vue agrandie
+                Flyer SAV Climsystem - vue agrandie
               </h2>
               <button
                 type="button"

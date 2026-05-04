@@ -1,7 +1,5 @@
 ﻿"use server";
 
-import { mkdir, writeFile } from "node:fs/promises";
-import { join } from "node:path";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -13,41 +11,72 @@ import {
   requireAdminSession,
   setAdminSessionCookie,
 } from "@/lib/admin/session";
+import {
+  CMS_IMAGE_FORM_KEEP_INLINE,
+  cmsImageUploadFieldName,
+} from "@/lib/admin/cmsUpload";
 
-async function persistUploadPublic(file: File): Promise<string> {
-  if (process.env.NETLIFY === "true") {
+const MAX_CMS_UPLOAD_IMAGE_BYTES = 2 * 1024 * 1024;
+
+/**
+ * Téléversement image CMS (« Photos & médias ») : stockage en data-URL dans la base (≤ 2 Mo).
+ * Open Graph : uniquement champ URL HTTPS (pas de fichier).
+ */
+async function persistUploadedCmsImage(
+  file: File,
+  options: { allowInlineDataUrlWithoutDisk: boolean },
+): Promise<string> {
+  if (file.size === 0) {
+    throw new Error("Le fichier envoyé est vide.");
+  }
+  if (file.size > MAX_CMS_UPLOAD_IMAGE_BYTES) {
     throw new Error(
-      "Les envois de fichiers ne sont pas disponibles sur Netlify (disque en lecture seule). Utilisez une URL vers une image ou un PDF déjà hébergés (CDN, stockage cloud, etc.).",
+      `Image trop volumineuse (maximum ${Math.round(MAX_CMS_UPLOAD_IMAGE_BYTES / (1024 * 1024))} Mo). Réduisez la taille ou utilisez une adresse HTTPS.`,
     );
   }
-  const original = file.name || "fichier";
-  const mime = file.type;
+
+  if (!options.allowInlineDataUrlWithoutDisk) {
+    throw new Error(
+      "Pour l’aperçu sur les réseaux sociaux (Open Graph), collez une adresse HTTPS vers l’image ; le téléversement fichier n’est pas prévu pour ce champ.",
+    );
+  }
+
+  const original = file.name || "image";
+  const mimeRaw = file.type || "";
+  const mime = mimeRaw.split(";")[0].trim().toLowerCase();
   let ext =
-    /\.(png|jpe?g|webp|gif|pdf)$/i.exec(original)?.[0]?.toLowerCase() ??
-    "";
+    /\.(png|jpe?g|webp|gif)$/i.exec(original)?.[0]?.toLowerCase() ?? "";
   if (!ext) {
-    if (mime === "application/pdf") ext = ".pdf";
-    else if (mime.includes("webp")) ext = ".webp";
-    else if (mime.includes("png")) ext = ".png";
-    else if (mime.includes("jpeg")) ext = ".jpg";
+    if (mime === "image/webp") ext = ".webp";
+    else if (mime === "image/png") ext = ".png";
+    else if (mime === "image/gif") ext = ".gif";
+    else if (mime === "image/jpeg" || mime === "image/jpg") ext = ".jpg";
     else ext = "";
   }
-  if (!ext) {
+
+  const isLikelyImage =
+    /^image\/(png|gif|webp|jpeg|jpg)$/i.test(mime) ||
+    /\.(png|jpe?g|webp|gif)$/i.test(original);
+  if (!isLikelyImage || !ext) {
     throw new Error(
-      "Extension de fichier non reconnue — utilisez PNG, JPG, WebP, GIF ou PDF.",
+      "Type non reconnu : utilisez une image PNG, JPG, WebP ou GIF.",
     );
   }
-  const extBase = ext.replace(/^\./, "");
-  if (!/^(png|jpg|jpeg|webp|gif|pdf)$/.test(extBase)) {
-    throw new Error("Format non accepté — PNG, JPG, WebP, GIF ou PDF.");
-  }
-  const slug = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-  const name = `upload-${slug}${ext}`;
-  const dir = join(process.cwd(), "public", "uploads");
-  await mkdir(dir, { recursive: true });
+
   const buf = Buffer.from(await file.arrayBuffer());
-  await writeFile(join(dir, name), buf);
-  return `/uploads/${name}`;
+
+  let safeMime =
+    mime && /^image\/(png|gif|webp|jpe?g|jpeg)$/i.test(mime) ? mime : "";
+  if (safeMime === "image/jpg") safeMime = "image/jpeg";
+  if (!safeMime) {
+    if (ext === ".png") safeMime = "image/png";
+    else if (ext === ".webp") safeMime = "image/webp";
+    else if (ext === ".gif") safeMime = "image/gif";
+    else safeMime = "image/jpeg";
+  }
+
+  const b64 = buf.toString("base64");
+  return `data:${safeMime};base64,${b64}`;
 }
 
 export async function adminLoginAction(formData: FormData) {
@@ -81,30 +110,85 @@ export async function adminLogoutAction() {
 export async function saveContentGroupAction(formData: FormData) {
   await requireAdminSession();
   const group = formData.get("group")?.toString()?.trim();
-  if (!group) redirect("/admin/textes");
+  const returnTo = formData.get("adminReturnTo")?.toString()?.trim();
+  const basePath =
+    returnTo === "medias" ? "/admin/medias" : "/admin/textes";
+  if (!group) redirect(basePath);
 
-  const keys = CONTENT_SEED_ROWS.filter((r) => r.group === group);
-  for (const row of keys) {
-    const raw = formData.get(row.key);
-    const value =
-      raw === null || raw === undefined ? "" : String(raw);
-    await prisma.contentBlock.upsert({
-      where: { key: row.key },
-      create: {
-        key: row.key,
-        label: row.label,
-        group: row.group,
-        value,
-      },
-      update: { value },
+  const pageFilterRaw = formData.get("adminPageFilter")?.toString()?.trim() ?? "";
+  const pageQs =
+    returnTo !== "medias" && pageFilterRaw && /^[a-z0-9-]+$/.test(pageFilterRaw)
+      ? `&page=${encodeURIComponent(pageFilterRaw)}`
+      : "";
+
+  const rowsInGroup = CONTENT_SEED_ROWS.filter((r) => r.group === group);
+
+  try {
+    const keysInGroup = rowsInGroup.map((r) => r.key);
+    const existingBlocks = await prisma.contentBlock.findMany({
+      where: { key: { in: keysInGroup } },
     });
+    const existingValueByKey = new Map(
+      existingBlocks.map((b) => [b.key, b.value]),
+    );
+
+    for (const row of rowsInGroup) {
+      const raw = formData.get(row.key);
+      const rawStr =
+        raw === null || raw === undefined ? "" : String(raw);
+
+      const uploadCandidate = formData.get(
+        cmsImageUploadFieldName(row.key),
+      );
+      const hasUpload =
+        uploadCandidate &&
+        typeof uploadCandidate !== "string" &&
+        typeof (uploadCandidate as File).arrayBuffer === "function" &&
+        (uploadCandidate as File).size > 0;
+
+      let value: string;
+      if (row.key.endsWith(".image_url")) {
+        if (hasUpload) {
+          const file = uploadCandidate as File;
+          value = await persistUploadedCmsImage(file, {
+            allowInlineDataUrlWithoutDisk: row.key !== "media.og.image_url",
+          });
+        } else if (rawStr === CMS_IMAGE_FORM_KEEP_INLINE) {
+          value = existingValueByKey.get(row.key) ?? "";
+        } else {
+          value = rawStr;
+        }
+      } else {
+        value = rawStr;
+      }
+
+      await prisma.contentBlock.upsert({
+        where: { key: row.key },
+        create: {
+          key: row.key,
+          label: row.label,
+          group: row.group,
+          value,
+        },
+        update: { value },
+      });
+    }
+  } catch (e) {
+    const msg =
+      e instanceof Error
+        ? e.message
+        : "Impossible d’enregistrer ce groupe. Réessayez ou contactez l’éditeur du site.";
+    redirect(
+      `${basePath}?err=${encodeURIComponent(msg)}${returnTo !== "medias" ? pageQs : ""}`,
+    );
   }
+
   revalidatePath("/", "layout");
   revalidatePath("/solutions");
   revalidatePath("/contact");
   revalidatePath("/agences");
   revalidatePath("/sav");
-  redirect(`/admin/textes?saved=${encodeURIComponent(group)}`);
+  redirect(`${basePath}?saved=${encodeURIComponent(group)}${pageQs}`);
 }
 
 const agencyParse = z.object({
@@ -259,11 +343,12 @@ export async function updateSiteSettingsAction(formData: FormData) {
   const cur = await prisma.siteSettings.findUnique({ where: { id: 1 } });
   if (!cur)
     redirect(
-      `/admin/parametres?err=${encodeURIComponent("site_settings introuvable — lancez le seed.")}`,
+      `/admin/parametres?err=${encodeURIComponent("site_settings introuvable - exécutez le seed contre la base (voir README).")}`,
     );
 
-  const footerIntro = formData.get("footerIntro")?.toString() ?? cur.footerIntro;
-  let savFlyerImage =
+  const footerIntro =
+    formData.get("footerIntro")?.toString() ?? cur.footerIntro;
+  const savFlyerImage =
     formData.get("savFlyerImage")?.toString()?.trim() ??
     cur.savFlyerImage;
   const savFlyerPdfRaw =
@@ -271,41 +356,17 @@ export async function updateSiteSettingsAction(formData: FormData) {
   const savImageAltRaw =
     formData.get("savImageAlt")?.toString()?.trim() ?? "";
 
-  try {
-    const imgFile = formData.get("savFlyerImageFile");
-    if (
-      imgFile &&
-      typeof imgFile !== "string" &&
-      typeof (imgFile as File).arrayBuffer === "function" &&
-      (imgFile as File).size > 0
-    ) {
-      savFlyerImage = await persistUploadPublic(imgFile as File);
-    }
-    const pdfFile = formData.get("savFlyerPdfFile");
-    let savFlyerPdf = savFlyerPdfRaw || cur.savFlyerPdf || null;
-    if (
-      pdfFile &&
-      typeof pdfFile !== "string" &&
-      typeof (pdfFile as File).arrayBuffer === "function" &&
-      (pdfFile as File).size > 0
-    ) {
-      savFlyerPdf = await persistUploadPublic(pdfFile as File);
-    }
+  const savFlyerPdf = savFlyerPdfRaw || cur.savFlyerPdf || null;
 
-    await prisma.siteSettings.update({
-      where: { id: 1 },
-      data: {
-        footerIntro,
-        savFlyerImage,
-        savFlyerPdf: savFlyerPdf || null,
-        savImageAlt: savImageAltRaw || null,
-      },
-    });
-  } catch (e) {
-    const msg =
-      e instanceof Error ? e.message : "Erreur enregistrement paramètres.";
-    redirect(`/admin/parametres?err=${encodeURIComponent(msg)}`);
-  }
+  await prisma.siteSettings.update({
+    where: { id: 1 },
+    data: {
+      footerIntro,
+      savFlyerImage,
+      savFlyerPdf,
+      savImageAlt: savImageAltRaw || null,
+    },
+  });
 
   revalidatePath("/", "layout");
   revalidatePath("/sav");

@@ -1,4 +1,4 @@
-﻿import { readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { PrismaClient } from "@prisma/client";
 import { CONTENT_SEED_ROWS } from "../src/lib/cms/contentSeed";
@@ -31,7 +31,11 @@ type SavFile = {
 
 function loadJson<T>(filename: string): T {
   const path = join(process.cwd(), "content", "site", filename);
-  return JSON.parse(readFileSync(path, "utf8")) as T;
+  let raw = readFileSync(path, "utf8");
+  if (raw.charCodeAt(0) === 0xfeff) {
+    raw = raw.slice(1);
+  }
+  return JSON.parse(raw) as T;
 }
 
 async function seedAgencies() {

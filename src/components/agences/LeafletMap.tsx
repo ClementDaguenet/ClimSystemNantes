@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
@@ -76,7 +76,7 @@ export default function LeafletMap({ agencies }: LeafletMapProps) {
             <div className="space-y-1 text-sm">
               {a.isFeatured && (
                 <span className="inline-block rounded-full bg-clim-red-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white">
-                  Nantes
+                  Agence principale
                 </span>
               )}
               <p className="font-bold text-clim-ink">{a.name}</p>

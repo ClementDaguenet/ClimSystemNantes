@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import {
   motion,
   useReducedMotion,
@@ -27,9 +28,17 @@ export type HeroCopy = {
 type HeroProps = {
   implantationCount: number;
   copy: HeroCopy;
+  /** Chemin /public/… ou URL HTTPS - si absent, affiche le visuel géométrique par défaut */
+  heroImageSrc?: string;
+  heroImageAlt?: string;
 };
 
-export function Hero({ implantationCount, copy }: HeroProps) {
+export function Hero({
+  implantationCount,
+  copy,
+  heroImageSrc,
+  heroImageAlt,
+}: HeroProps) {
   const prefersReducedMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -153,47 +162,70 @@ export function Hero({ implantationCount, copy }: HeroProps) {
             className="relative hidden lg:block"
             aria-hidden="true"
           >
-            {/* Visuel décoratif placeholder (sera remplacé par une image produit) */}
-            <div className="relative aspect-square w-full max-w-lg ml-auto">
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-md border border-white/30" />
-              <div className="absolute inset-6 rounded-2xl bg-gradient-to-br from-clim-blue-300/30 to-clim-red-500/20 border border-white/20" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <svg
-                  width="180"
-                  height="180"
-                  viewBox="0 0 180 180"
-                  fill="none"
-                  className="text-white/90"
-                >
-                  <circle
-                    cx="90"
-                    cy="90"
-                    r="60"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    opacity="0.3"
+            <div className="relative ml-auto aspect-square w-full max-w-lg">
+              {heroImageSrc ? (
+                <div className="relative h-full min-h-[280px] w-full overflow-hidden rounded-3xl border border-white/30 shadow-xl">
+                  <Image
+                    src={heroImageSrc}
+                    alt={heroImageAlt?.trim() || ""}
+                    fill
+                    sizes="(max-width: 1024px) 0vw, 36vw"
+                    className="object-cover"
+                    priority
+                    unoptimized={
+                      /^https?:\/\//i.test(heroImageSrc) ||
+                      heroImageSrc.startsWith("data:image/")
+                    }
                   />
-                  <circle
-                    cx="90"
-                    cy="90"
-                    r="40"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    opacity="0.5"
-                  />
-                  <g stroke="currentColor" strokeWidth="3" strokeLinecap="round">
-                    <line x1="90" y1="40" x2="90" y2="60" />
-                    <line x1="90" y1="120" x2="90" y2="140" />
-                    <line x1="40" y1="90" x2="60" y2="90" />
-                    <line x1="120" y1="90" x2="140" y2="90" />
-                    <line x1="55" y1="55" x2="68" y2="68" />
-                    <line x1="112" y1="112" x2="125" y2="125" />
-                    <line x1="125" y1="55" x2="112" y2="68" />
-                    <line x1="68" y1="112" x2="55" y2="125" />
-                  </g>
-                  <circle cx="90" cy="90" r="8" fill="currentColor" />
-                </svg>
-              </div>
+                </div>
+              ) : (
+                <>
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-md border border-white/30" />
+                  <div className="absolute inset-6 rounded-2xl bg-gradient-to-br from-clim-blue-300/30 to-clim-red-500/20 border border-white/20" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <svg
+                      width="180"
+                      height="180"
+                      viewBox="0 0 180 180"
+                      fill="none"
+                      className="text-white/90"
+                      aria-hidden="true"
+                    >
+                      <circle
+                        cx="90"
+                        cy="90"
+                        r="60"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        opacity="0.3"
+                      />
+                      <circle
+                        cx="90"
+                        cy="90"
+                        r="40"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        opacity="0.5"
+                      />
+                      <g
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                      >
+                        <line x1="90" y1="40" x2="90" y2="60" />
+                        <line x1="90" y1="120" x2="90" y2="140" />
+                        <line x1="40" y1="90" x2="60" y2="90" />
+                        <line x1="120" y1="90" x2="140" y2="90" />
+                        <line x1="55" y1="55" x2="68" y2="68" />
+                        <line x1="112" y1="112" x2="125" y2="125" />
+                        <line x1="125" y1="55" x2="112" y2="68" />
+                        <line x1="68" y1="112" x2="55" y2="125" />
+                      </g>
+                      <circle cx="90" cy="90" r="8" fill="currentColor" />
+                    </svg>
+                  </div>
+                </>
+              )}
             </div>
           </motion.div>
         </div>

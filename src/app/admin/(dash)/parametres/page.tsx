@@ -14,14 +14,11 @@ export default async function AdminParametresPage({
   if (!s) {
     return (
       <p className="text-red-600">
-        Aucune ligne <code>site_settings</code> — exécutez{" "}
-        <code>npx prisma migrate deploy</code> puis{" "}
-        <code>npx prisma db seed</code>.
+        Aucune ligne <code>site_settings</code>. Exécutez le seed contre la base
+        PostgreSQL (voir README, commande <code>prisma db seed</code>).
       </p>
     );
   }
-
-  const onNetlify = process.env.NETLIFY === "true";
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -32,18 +29,25 @@ export default async function AdminParametresPage({
         Paramètres du site public
       </h1>
       <p className="mt-2 text-sm text-slate-600">
-        Texte libre sous le pied de page, médias du flyer SAV. En local vous
-        pouvez envoyer des fichiers vers <code>/public/uploads</code> ; sur
-        Netlify, indiquez uniquement des <strong>URLs</strong> vers des
-        fichiers déjà hébergés (le disque serveur y est en lecture seule).
+        Texte sous le pied de page et médias du flyer SAV. Indiquez des{" "}
+        <strong>chemins</strong> vers des fichiers présents dans le dépôt sous{" "}
+        <code className="text-xs">public/</code> (ex.{" "}
+        <code className="text-xs">/sav-flyer.png</code>) ou des{" "}
+        <strong>adresses HTTPS</strong> vers des fichiers hébergés en ligne.
       </p>
-      {onNetlify ? (
-        <p className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-950">
-          Déploiement Netlify détecté : les champs d’envoi de fichier sont
-          désactivés. Utilisez une URL absolue ou un chemin dans{" "}
-          <code>public/</code> présent dans le dépôt Git.
-        </p>
-      ) : null}
+      <p className="mt-4 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">
+        Pas d’envoi de fichier ici : ajoutez les visuels dans Git sous{" "}
+        <code className="text-xs">public/</code> puis mettez à jour les champs,
+        ou utilisez une URL. Pour modifier les grandes photos de page, passez
+        par{" "}
+        <Link
+          href="/admin/medias"
+          className="font-medium text-clim-blue-700 underline hover:no-underline"
+        >
+          Photos &amp; médias
+        </Link>
+        .
+      </p>
       {q.ok === "1" ? (
         <p className="mt-4 rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-900">
           Enregistrement réussi.
@@ -72,8 +76,8 @@ export default async function AdminParametresPage({
           </h2>
           <label className="mt-3 block">
             <span className="text-sm text-slate-700">
-              Chemin ou URL du visuel (ex.{" "}
-              <code>/sav/notre-visuel.webp</code> ou URL absolue)
+              Chemin sous <code className="text-xs">public/</code> ou URL HTTPS
+              du visuel (ex. <code className="text-xs">/sav-flyer.webp</code>)
             </span>
             <input
               name="savFlyerImage"
@@ -81,22 +85,9 @@ export default async function AdminParametresPage({
               className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
             />
           </label>
-          {!onNetlify ? (
-            <label className="mt-3 block">
-              <span className="text-sm text-slate-700">
-                Remplacer par un fichier image
-              </span>
-              <input
-                name="savFlyerImageFile"
-                type="file"
-                accept="image/png,image/jpeg,image/webp,image/gif"
-                className="mt-1 w-full text-sm"
-              />
-            </label>
-          ) : null}
           <label className="mt-4 block">
             <span className="text-sm text-slate-700">
-              URL du PDF ou chemin sous <code>/public</code>
+              Chemin ou URL HTTPS du PDF (optionnel)
             </span>
             <input
               name="savFlyerPdf"
@@ -105,25 +96,14 @@ export default async function AdminParametresPage({
               className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
             />
           </label>
-          {!onNetlify ? (
-            <label className="mt-3 block">
-              <span className="text-sm text-slate-700">Remplacer par un PDF</span>
-              <input
-                name="savFlyerPdfFile"
-                type="file"
-                accept="application/pdf"
-                className="mt-1 w-full text-sm"
-              />
-            </label>
-          ) : null}
           <label className="mt-4 block">
             <span className="text-sm text-slate-700">
-              Texte alternatif du visuel
+              Texte alternatif du visuel (accessibilité)
             </span>
             <input
               name="savImageAlt"
               defaultValue={s.savImageAlt ?? ""}
-              placeholder="optionnel — accessibilité"
+              placeholder="optionnel"
               className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
             />
           </label>

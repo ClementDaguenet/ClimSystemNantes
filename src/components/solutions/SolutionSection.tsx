@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { Check } from "lucide-react";
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { Container } from "@/components/ui/Container";
 import { solutions } from "@/data/solutions";
@@ -10,14 +11,25 @@ import { cn } from "@/lib/cn";
 interface SolutionSectionProps {
   slug: string;
   reverse?: boolean;
+  /** URL /public/… ou HTTPS - depuis le CMS */
+  imageSrc?: string;
+  /** Surcharge du texte alternatif (CMS) ; défaut métadonnées de la famille */
+  imageAlt?: string;
 }
 
 /** Résolution par `slug` côté client (icônes Lucide non sérialisables depuis le serveur). */
-export function SolutionSection({ slug, reverse = false }: SolutionSectionProps) {
+export function SolutionSection({
+  slug,
+  reverse = false,
+  imageSrc,
+  imageAlt: imageAltProp,
+}: SolutionSectionProps) {
   const prefersReducedMotion = useReducedMotion();
   const solution = solutions.find((s) => s.slug === slug);
   if (!solution) return null;
   const Icon = solution.icon;
+  const visualAlt =
+    (imageAltProp?.trim() || solution.imageAlt).trim() || "";
   const textVariants = reverse ? slideInRight : slideInLeft;
   const imgVariants = reverse ? slideInLeft : slideInRight;
 
@@ -86,28 +98,43 @@ export function SolutionSection({ slug, reverse = false }: SolutionSectionProps)
             variants={prefersReducedMotion ? undefined : imgVariants}
             className="relative"
           >
-            {/* Placeholder visuel : carte décorative à remplacer par une photo produit. */}
-            <div
-              role="img"
-              aria-label={solution.imageAlt}
-              className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border border-clim-blue-100 bg-gradient-to-br from-clim-blue-50 via-white to-clim-blue-100 shadow-card"
-            >
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 opacity-50"
-              >
-                <div className="absolute -top-10 -left-10 h-40 w-40 rounded-full bg-clim-blue-200 blur-3xl" />
-                <div className="absolute -bottom-10 -right-10 h-48 w-48 rounded-full bg-clim-red-100 blur-3xl" />
+            {imageSrc?.trim() ? (
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border border-clim-blue-100 bg-black/5 shadow-card">
+                <Image
+                  src={imageSrc.trim()}
+                  alt={visualAlt}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 48vw"
+                  className="object-cover"
+                  unoptimized={
+                    /^https?:\/\//i.test(imageSrc.trim()) ||
+                    imageSrc.trim().startsWith("data:image/")
+                  }
+                />
               </div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="flex flex-col items-center gap-4 text-clim-blue-700/60">
-                  <Icon size={120} strokeWidth={1.2} />
-                  <span className="text-xs uppercase tracking-widest">
-                    Image produit à venir
-                  </span>
+            ) : (
+              <div
+                role="img"
+                aria-label={visualAlt}
+                className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border border-clim-blue-100 bg-gradient-to-br from-clim-blue-50 via-white to-clim-blue-100 shadow-card"
+              >
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 opacity-50"
+                >
+                  <div className="absolute -top-10 -left-10 h-40 w-40 rounded-full bg-clim-blue-200 blur-3xl" />
+                  <div className="absolute -bottom-10 -right-10 h-48 w-48 rounded-full bg-clim-red-100 blur-3xl" />
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="flex flex-col items-center gap-4 text-clim-blue-700/60">
+                    <Icon size={120} strokeWidth={1.2} />
+                    <span className="text-xs uppercase tracking-widest">
+                      Image produit à venir
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
             {/* Badge accent rouge */}
             <div
               aria-hidden="true"

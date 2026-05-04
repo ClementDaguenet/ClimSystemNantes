@@ -1,4 +1,4 @@
-﻿/** Clés utilisées sur la page d’accueil (pour requête groupée CMS). */
+/** Clés utilisées sur la page d’accueil (pour requête groupée CMS). */
 export const HOME_CONTENT_KEYS = [
   "hero.badge",
   "hero.h1_lead",
@@ -39,4 +39,6 @@ export const HOME_CONTENT_KEYS = [
   "home.nantes.btn_nantes",
   "home.nantes.btn_all",
   "home.nantes.card_badge",
+  "media.hero.image_url",
+  "media.hero.image_alt",
 ] as const;

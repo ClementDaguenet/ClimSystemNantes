@@ -83,7 +83,7 @@ export function ContactForm() {
     try {
       await new Promise((r) => setTimeout(r, 900));
       if (process.env.NODE_ENV === "development") {
-        console.info("[contact] Démo — données reçues :", data);
+        console.info("[contact] Démo - données reçues :", data);
       }
       setStatus("success");
       reset({
@@ -237,7 +237,7 @@ export function ContactForm() {
               <p>
                 En production, cet envoi partirait vers l&apos;équipe. Pour
                 l&apos;instant le formulaire sert uniquement à valider vos
-                informations — pensez à nous appeler ou à passer par vos canaux habituels
+                informations - pensez à nous appeler ou à passer par vos canaux habituels
                 pour une réponse garantie.
               </p>
             </div>

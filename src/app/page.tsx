@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { Hero } from "@/components/home/Hero";
 import { Presentation } from "@/components/home/Presentation";
 import { AtoutsGrid } from "@/components/home/AtoutsGrid";
@@ -20,6 +20,9 @@ export default async function HomePage() {
 
   const c = await getContents([...HOME_CONTENT_KEYS]);
 
+  const heroImageUrl = c["media.hero.image_url"].trim();
+  const heroImageAlt = c["media.hero.image_alt"].trim();
+
   return (
     <>
       <Hero
@@ -35,6 +38,8 @@ export default async function HomePage() {
           statImplantsLabel: c["hero.stat_implants"],
           statBrandsLabel: c["hero.stat_brands"],
         }}
+        heroImageSrc={heroImageUrl || undefined}
+        heroImageAlt={heroImageAlt}
       />
       <Presentation
         copy={{

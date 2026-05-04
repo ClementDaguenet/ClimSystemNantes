@@ -31,13 +31,13 @@ export default async function MentionsLegalesPage() {
           Atlantique
         </div>
         <div>
-          <strong>Forme juridique&nbsp;:</strong> [SAS / SARL — à compléter]
+          <strong>Forme juridique&nbsp;:</strong> [SAS / SARL - à compléter]
         </div>
         <div>
           <strong>Capital social&nbsp;:</strong> [à compléter] €
         </div>
         <div>
-          <strong>Siège social&nbsp;:</strong> [adresse du siège social — à
+          <strong>Siège social&nbsp;:</strong> [adresse du siège social - à
           compléter conformément aux statuts de la société]
         </div>
         <div>
@@ -49,8 +49,8 @@ export default async function MentionsLegalesPage() {
           <strong>SIRET&nbsp;:</strong> [à compléter]
         </div>
         <div>
-          <strong>RCS&nbsp;:</strong> [Ville d&apos;immatriculation —
-          à compléter] — [Numéro à compléter]
+          <strong>RCS&nbsp;:</strong> [Ville d&apos;immatriculation -
+          à compléter] - [Numéro à compléter]
         </div>
         <div>
           <strong>N° TVA intracommunautaire&nbsp;:</strong> [FRXX XXXXXXXXX]
@@ -66,7 +66,7 @@ export default async function MentionsLegalesPage() {
           <a href={`mailto:${featuredAgency.email}`}>{featuredAgency.email}</a>
         </div>
         <div>
-          <strong>Directeur de la publication&nbsp;:</strong> [Nom Prénom — à
+          <strong>Directeur de la publication&nbsp;:</strong> [Nom Prénom - à
           compléter]
         </div>
       </div>
@@ -75,11 +75,11 @@ export default async function MentionsLegalesPage() {
       <p>Le site est hébergé par&nbsp;:</p>
       <div className="definitions">
         <div>
-          <strong>Hébergeur&nbsp;:</strong> [Nom de l&apos;hébergeur — ex.
+          <strong>Hébergeur&nbsp;:</strong> [Nom de l&apos;hébergeur - ex.
           Netlify Inc.]
         </div>
         <div>
-          <strong>Adresse&nbsp;:</strong> [Adresse complète — à compléter]
+          <strong>Adresse&nbsp;:</strong> [Adresse complète - à compléter]
         </div>
         <div>
           <strong>Site web&nbsp;:</strong>{" "}

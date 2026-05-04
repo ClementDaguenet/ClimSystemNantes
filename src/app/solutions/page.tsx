@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { SolutionSection } from "@/components/solutions/SolutionSection";
@@ -20,14 +20,21 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   { name: "Nos solutions", url: "/solutions" },
 ]);
 
-const KEYS = [
+const HERO_KEYS = [
   "page.solutions.hero_eyebrow",
   "page.solutions.hero_title",
   "page.solutions.hero_subtitle",
 ] as const;
 
+function solutionMediaKeys(): string[] {
+  return solutions.flatMap((s) => [
+    `media.solutions.${s.slug}.image_url`,
+    `media.solutions.${s.slug}.image_alt`,
+  ]);
+}
+
 export default async function SolutionsPage() {
-  const c = await getContents([...KEYS]);
+  const c = await getContents([...HERO_KEYS, ...solutionMediaKeys()]);
 
   return (
     <>
@@ -56,13 +63,21 @@ export default async function SolutionsPage() {
 
       <SolutionsNav />
 
-      {solutions.map((sol, idx) => (
-        <SolutionSection
-          key={sol.id}
-          slug={sol.slug}
-          reverse={idx % 2 === 1}
-        />
-      ))}
+      {solutions.map((sol, idx) => {
+        const urlKey = `media.solutions.${sol.slug}.image_url` as const;
+        const altKey = `media.solutions.${sol.slug}.image_alt` as const;
+        const rawUrl = c[urlKey]?.trim() ?? "";
+        const rawAlt = c[altKey]?.trim() ?? "";
+        return (
+          <SolutionSection
+            key={sol.id}
+            slug={sol.slug}
+            reverse={idx % 2 === 1}
+            imageSrc={rawUrl || undefined}
+            imageAlt={rawAlt || undefined}
+          />
+        );
+      })}
     </>
   );
 }

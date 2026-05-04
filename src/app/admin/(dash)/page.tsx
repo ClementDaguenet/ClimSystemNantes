@@ -1,5 +1,5 @@
 ﻿import Link from "next/link";
-import { MapPin, Settings2, Type } from "lucide-react";
+import { ImageIcon, MapPin, Settings2, Type } from "lucide-react";
 
 export default function AdminDashboardPage() {
   const cards = [
@@ -12,13 +12,19 @@ export default function AdminDashboardPage() {
     {
       href: "/admin/parametres",
       title: "Paramètres",
-      desc: "Introduction du pied de page, flyers SAV, URLs ou envoi local des fichiers.",
+      desc: "Footer, flyer SAV : chemins public/ dans Git ou liens HTTPS.",
       Icon: Settings2,
+    },
+    {
+      href: "/admin/medias",
+      title: "Photos & médias",
+      desc: "Envoi d’images depuis l’ordinateur (ou liens), Hero, OG, 6 visuels Solutions.",
+      Icon: ImageIcon,
     },
     {
       href: "/admin/textes",
       title: "Textes",
-      desc: "Titres et paragraphes des pages d’accueil, Solutions, Contact, Agences, SAV.",
+      desc: "Titres et paragraphes par page (Accueil, Solutions, Contact, Agences, SAV).",
       Icon: Type,
     },
   ];
@@ -30,7 +36,8 @@ export default function AdminDashboardPage() {
       </h1>
       <p className="mt-2 max-w-2xl text-sm text-slate-600">
         Les modifications sont écrites en base et reflétées au prochain rendu du
-        site (sans redéployer). Sur « Textes », enregistrez{" "}
+        site (sans redéployer). Sur « Textes » et « Photos &amp; médias »,
+        enregistrez{" "}
         <strong>groupe par groupe</strong> avec le bouton dédié.
       </p>
       <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

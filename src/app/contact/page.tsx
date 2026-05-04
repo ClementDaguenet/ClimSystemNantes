@@ -128,7 +128,7 @@ export default async function ContactPage() {
                         <span className="font-medium text-clim-ink">
                           {a.city}
                         </span>{" "}
-                        —{" "}
+                        -{" "}
                         <a
                           href={`tel:${a.phone.replace(/\s/g, "")}`}
                           className="hover:text-clim-blue-700"

@@ -13,7 +13,7 @@ export default async function AdminLoginPage({
     q.err === "auth"
       ? "Mot de passe incorrect."
       : q.err === "config"
-        ? "Configuration invalide : ADMIN_JWT_SECRET ou ADMIN_PASSWORD manquant."
+        ? "Configuration invalide. Veuillez contacter l'administrateur."
         : null;
 
   return (
@@ -23,11 +23,7 @@ export default async function AdminLoginPage({
           Connexion back-office
         </h1>
         <p className="mt-2 text-sm text-slate-600">
-          Accès réservé. Utilisez le mot de passe défini dans{" "}
-          <code className="rounded bg-slate-100 px-1 py-0.5 text-xs">
-            ADMIN_PASSWORD
-          </code>
-          .
+          Accès réservé. Veuillez contacter l'administrateur si vous n'avez pas de mot de passe.
         </p>
         {msg ? (
           <p

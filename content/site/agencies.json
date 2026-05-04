@@ -2,53 +2,53 @@
   "items": [
     {
       "id": "nantes",
-      "name": "Climsystem Distribution Atlantique - Nantes",
-      "city": "Nantes",
-      "address": "12 rue du Génie Climatique",
-      "postalCode": "44000",
-      "phone": "02 40 00 00 00",
-      "email": "nantes@climsystem.fr",
+      "name": "Climsystem Distribution Atlantique",
+      "city": "Les Sorinières",
+      "address": "1 Rue des Prairies",
+      "postalCode": "44840",
+      "phone": "02 59 16 58 37",
+      "email": "contact44@climsystem.com",
       "hours": "Lun-Ven : 8h-12h / 14h-18h",
-      "latitude": 47.2184,
-      "longitude": -1.5536,
+      "latitude": 47.148,
+      "longitude": -1.743,
       "isFeatured": true,
-      "tagline": "Bureau d'études, équipe technique et dépôt : votre interlocuteur privilégié pour l'Ouest et la façade atlantique."
+      "tagline": "Bureau d'études, équipe technique et dépôt métropole nantaise - votre interlocuteur privilégié pour l'Ouest et la façade atlantique."
     },
     {
       "id": "chatillon",
-      "name": "Climsystem - Châtillon",
+      "name": "Climsystem",
       "city": "Châtillon",
-      "address": "À compléter",
+      "address": "5 Rue Courtois",
       "postalCode": "92320",
-      "phone": "01 00 00 00 00",
-      "email": "chatillon@climsystem.fr",
+      "phone": "01 47 35 10 43",
+      "email": "contact@climsystem.com",
       "hours": "Lun-Ven : 8h-12h / 14h-18h",
-      "latitude": 48.8019,
-      "longitude": 2.2891
+      "latitude": 48.8138,
+      "longitude": 2.2865
     },
     {
       "id": "tours",
-      "name": "Climsystem - Tours",
-      "city": "Tours",
-      "address": "À compléter",
-      "postalCode": "37000",
-      "phone": "02 47 00 00 00",
-      "email": "tours@climsystem.fr",
+      "name": "Climsystem Distribution Centre",
+      "city": "Chambray-lès-Tours",
+      "address": "3 Rue Thérèse Planiol",
+      "postalCode": "37170",
+      "phone": "02 47 36 22 67",
+      "email": "contact37@climsystem.com",
       "hours": "Lun-Ven : 8h-12h / 14h-18h",
-      "latitude": 47.3941,
-      "longitude": 0.6848
+      "latitude": 47.337,
+      "longitude": 0.704
     },
     {
       "id": "aubagne",
-      "name": "Climsystem - Aubagne",
+      "name": "Climsystem Distribution Provence",
       "city": "Aubagne",
-      "address": "À compléter",
+      "address": "6 Avenue des Caniers",
       "postalCode": "13400",
-      "phone": "04 42 00 00 00",
-      "email": "aubagne@climsystem.fr",
+      "phone": "04 48 82 29 10",
+      "email": "contact13@climsystem.com",
       "hours": "Lun-Ven : 8h-12h / 14h-18h",
-      "latitude": 43.2924,
-      "longitude": 5.5658
+      "latitude": 43.2935,
+      "longitude": 5.5665
     }
   ]
 }
