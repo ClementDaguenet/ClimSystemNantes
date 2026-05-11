@@ -3,10 +3,11 @@
 
 [build]
   publish = ".next"
-  command = "npx prisma migrate deploy && npm run build"
+  command = "npm run build"
 
 [build.environment]
   NODE_VERSION = "22"
+  NEXT_PUBLIC_SITE_URL = "https://prismatic-squirrel-0aa1a5.netlify.app"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
