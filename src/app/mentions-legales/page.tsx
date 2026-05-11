@@ -75,20 +75,20 @@ export default async function MentionsLegalesPage() {
       <p>Le site est hébergé par&nbsp;:</p>
       <div className="definitions">
         <div>
-          <strong>Hébergeur&nbsp;:</strong> [Nom de l&apos;hébergeur - ex.
-          Netlify Inc.]
+          <strong>Hébergeur&nbsp;:</strong> Vercel Inc.
         </div>
         <div>
-          <strong>Adresse&nbsp;:</strong> [Adresse complète - à compléter]
+          <strong>Adresse&nbsp;:</strong> 440&nbsp;N Barranca Ave #4133 —
+          Covina, CA&nbsp;91723, États-Unis
         </div>
         <div>
           <strong>Site web&nbsp;:</strong>{" "}
           <a
-            href="https://www.netlify.com"
+            href="https://vercel.com"
             target="_blank"
             rel="noopener noreferrer"
           >
-            [URL du site de l&apos;hébergeur]
+            vercel.com
           </a>
         </div>
       </div>

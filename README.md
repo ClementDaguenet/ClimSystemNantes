@@ -8,26 +8,40 @@ Site web professionnel **Climsystem**, distributeur en génie climatique sur le 
 - TypeScript (strict)
 - [PostgreSQL](https://www.postgresql.org/) + [Prisma 6](https://www.prisma.io/) - agences, paramètres site, textes CMS (`content_blocks`), back-office JWT
 - [Tailwind CSS v4](https://tailwindcss.com/) - configuration CSS-first via `@theme`
-- Hébergement **[Netlify](https://www.netlify.com/)** (`netlify.toml` + plugin Next.js officiel)
+- Hébergement **[Vercel](https://vercel.com)** (compatible Next sans config obligatoire)
 - [Framer Motion](https://www.framer.com/motion/) - animations au scroll, respect de `prefers-reduced-motion`
 - [lucide-react](https://lucide.dev/) - iconographie
 - [React-Leaflet](https://react-leaflet.js.org/) + OpenStreetMap - carte interactive (`ssr: false`)
 - [react-hook-form](https://react-hook-form.com/) + [zod](https://zod.dev/) - validation du formulaire de contact
 
-## Déploiement sur Netlify
+## Déploiement sur Vercel
 
 1. Créer une base **PostgreSQL managée** (ex. [Neon](https://neon.tech), [Supabase](https://supabase.com)) et récupérer l’URI.
-2. **Netlify** - **Site configuration → Environment variables** : **`DATABASE_URL`**, **`ADMIN_PASSWORD`**, **`ADMIN_JWT_SECRET`**. Facultatif : **`NEXT_PUBLIC_SITE_URL`** (URL publique définitive).
-3. Connecter le **dépôt Git** ; le build défini dans `netlify.toml` enchaîne **`npx prisma migrate deploy`** puis **`npm run build`**. Node **22** (voir `netlify.toml`).
-4. **Premier remplissage de la base** (une fois, si elle est vide) : depuis une machine où le projet est lié au site (`netlify link`), exécuter :
+2. **Vercel** — projet importé depuis **GitHub** : **Project → Settings → Environment Variables** pour **Production / Preview**. Définir au minimum :
+   - **`DATABASE_URL`**
+   - **`ADMIN_PASSWORD`**
+   - **`ADMIN_JWT_SECRET`**
+   - Facultatif : **`NEXT_PUBLIC_SITE_URL`** = URL définitive (ex. `https://www.climsystem.fr` ou `https://votre-projet.vercel.app`)
+3. **Build** : Vercel lance **`npm run build`** (install + `postinstall` → Prisma Generate). Pas de fichier `vercel.toml` nécessaire pour ce projet.
+4. **Migrations Prisma** (à faire une fois après un changement de schéma ou avant première prod) : en local, avec la même **`DATABASE_URL`** que sur Vercel :
 
    ```bash
-   netlify env:exec -- npx prisma db seed
+   npx prisma migrate deploy
    ```
 
-   (Les variables sont injectées comme sur la plateforme.) Alternative : exporter **`DATABASE_URL`** puis **`npx prisma db seed`** pour une exécution ponctuelle.
+   Tu peux copier **`DATABASE_URL`** depuis Vercel, ou : **`vercel env pull .env.vercel`** (nécessite CLI + `vercel link`) puis lancer migrate avec ce fichier comme env.
 
-5. Connexion au back-office : **`https://<votre-site>/admin/login`**.
+5. **Seed données** (une fois si la base est vide) :
+
+   ```bash
+   npx prisma db seed
+   ```
+
+6. Connexion back-office : **`https://<ta-domaine>/admin/login`** (ou `https://<projet>.vercel.app/admin/login`).
+
+### Domaine OVH ou autre
+
+**Vercel → Project → Domains** : ajouter `www.example.com` / `example.com`. Puis dans la **zone DNS** chez OVH, suivre les enregistrements indiqués par Vercel (souvent **CNAME** vers `cname.vercel-dns.com`).
 
 ### Ce que permet l’admin
 
@@ -40,9 +54,10 @@ Les **fichiers versionnés** dans `public/` (logos marques sous `public/brands/`
 
 ```bash
 npm install
-npm run build          # vérifiation build (après prisma generate automatique au postinstall)
+npm run build          # même commande que Vercel
 npm run lint
-npm run db:seed        # nécessite DATABASE_URL défini dans l’environnement courant
+npm run db:migrate    # prisma migrate deploy (DATABASE_URL requis)
+npm run db:seed       # prisma db seed (DATABASE_URL requis)
 ```
 
 ## Architecture

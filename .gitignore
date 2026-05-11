@@ -38,11 +38,10 @@ yarn-error.log*
 .env.production
 .env.test
 
-# vercel (ancien)
+# vercel CLI (projets linkés localement avec `vercel link`)
 .vercel
 
-# netlify CLI local
-.netlify
+# dossier métadonnées Netlify CLI (si utilisé encore en local — optionnel à supprimer)
 
 # typescript
 *.tsbuildinfo
