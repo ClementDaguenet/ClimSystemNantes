@@ -2,15 +2,27 @@
 import type { NextRequest } from "next/server";
 import { verifyAdminToken } from "@/lib/admin/jwt";
 import { ADMIN_COOKIE_NAME } from "@/lib/admin/constants";
+import { getApexHost, getSiteHost } from "@/lib/siteUrl";
 
 export async function middleware(request: NextRequest) {
+  const host = request.headers.get("host")?.split(":")[0] ?? "";
+  const apex = getApexHost();
+  const canonicalHost = getSiteHost();
+
+  if (apex && host === apex) {
+    const url = request.nextUrl.clone();
+    url.protocol = request.nextUrl.protocol;
+    url.host = canonicalHost;
+    return NextResponse.redirect(url, 308);
+  }
+
   const { pathname } = request.nextUrl;
   if (!pathname.startsWith("/admin")) return NextResponse.next();
   if (pathname.startsWith("/admin/login")) return NextResponse.next();
 
   const secret = process.env.ADMIN_JWT_SECRET;
   if (!secret) {
-    return new NextResponse("Configuration invalide : ADMIN_JWT_SECRET absent.", {
+    return new NextResponse("Configuration invalide : ADMIN_JWT_SECRET absent.", {
       status: 500,
     });
   }
@@ -27,5 +39,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin", "/admin/:path*"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
+  ],
 };

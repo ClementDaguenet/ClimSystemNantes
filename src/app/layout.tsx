@@ -8,6 +8,7 @@ import {
   buildOrganizationSchema,
   websiteSchema,
 } from "@/lib/seo";
+import { getSiteUrl } from "@/lib/siteUrl";
 import { getAgencies } from "@/lib/cms/loaders";
 import { getContents } from "@/lib/cms/content";
 
@@ -19,7 +20,7 @@ const geistSans = Geist({
 
 /** Métadonnées de base ; l’image Open Graph peut être surchargée depuis le CMS (`media.og.image_url`). */
 export const SITE_METADATA_STATIC: Metadata = {
-  metadataBase: new URL("https://www.climsystem.fr"),
+  metadataBase: new URL(getSiteUrl()),
   title: {
     default: "Climsystem Distribution Atlantique - Génie climatique à Nantes",
     template: "%s | Climsystem Distribution Atlantique",
@@ -118,7 +119,7 @@ export default async function RootLayout({
         {organizationJsonLd ? (
           <JsonLd id="ld-organization" data={organizationJsonLd} />
         ) : null}
-        <JsonLd id="ld-website" data={websiteSchema} />
+        <JsonLd id="ld-website" data={websiteSchema()} />
       </body>
     </html>
   );

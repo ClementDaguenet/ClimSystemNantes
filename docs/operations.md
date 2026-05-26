@@ -1,4 +1,4 @@
-﻿# Notes opérationnelles
+# Notes opérationnelles
 
 ## Modèle PostgreSQL + Prisma
 
@@ -11,13 +11,14 @@ Contenu JSON initial dans **`content/site/`** importé via **`prisma/seed.ts`**.
 ## Back-office `/admin`
 
 - **`ADMIN_PASSWORD`**, **`ADMIN_JWT_SECRET`** : variables Vercel (voir `.env.example`).
-- Middleware JWT sur les routes `/admin` hors login.
+- Middleware JWT sur les routes `/admin` hors login ; rate-limit login (8 tentatives / 15 min).
 
 ### Vercel
 
 - **Build** : `npm run build` (défaut projet Next sur Vercel). Node selon **`engines`** / réglages projet (**Settings → Node.js Version** si besoin).
-- **Migrations** : pas dans le pipeline par défaut ; exécuter **`prisma migrate deploy`** en local (ou CI) avec la **`DATABASE_URL`** de prod — voir README.
-- **`VERCEL`** : présent automatiquement sur la plateforme (comme autres `VERCEL_*`) si nécessaire un jour dans le code.
+- **URL canonique** : `NEXT_PUBLIC_SITE_URL` → `src/lib/siteUrl.ts` (défaut `https://www.climsystem-distribution-atlantique.fr`).
+- **Migrations** : pas dans le pipeline par défaut ; **`prisma migrate deploy`** en local (ou CI). Avec **Supabase** : **`DATABASE_URL`** = pooler, **`DIRECT_URL`** = session pooler ou direct pour migrer. **Neon** : **`DIRECT_URL`** = même valeur que **`DATABASE_URL`**.
+- **Sécurité** : en-têtes `next.config.ts`, `robots.txt` (`/admin` disallow), cookie admin `SameSite=Strict`.
 - Flyer (**Paramètres**) : pas d’upload ; chemins **`public/`** ou URLs externes. Photos de page (**Photos & médias**) : téléchargement stocké dans la base (data-URL ≤ 2 Mo) ou lien ; OG : URL **`https`** uniquement.
 
 ### Fichiers utiles

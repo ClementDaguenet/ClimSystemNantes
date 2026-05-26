@@ -1,8 +1,12 @@
 ﻿import type { MetadataRoute } from "next";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 export default function robots(): MetadataRoute.Robots {
+  const base = getSiteUrl();
   return {
-    rules: { userAgent: "*", allow: "/" },
-    sitemap: "https://www.climsystem.fr/sitemap.xml",
+    rules: [
+      { userAgent: "*", allow: "/", disallow: ["/admin", "/admin/"] },
+    ],
+    sitemap: `${base}/sitemap.xml`,
   };
 }

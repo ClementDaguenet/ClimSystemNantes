@@ -1,8 +1,8 @@
 ﻿import type { MetadataRoute } from "next";
-
-const baseUrl = "https://www.climsystem.fr";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = getSiteUrl();
   const lastModified = new Date();
   const routes = [
     { path: "", priority: 1, changeFrequency: "monthly" as const },

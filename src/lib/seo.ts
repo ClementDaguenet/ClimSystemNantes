@@ -1,25 +1,31 @@
 ﻿import type { Agency } from "@/types";
 import { officialLogoAbsoluteUrl } from "@/lib/assets";
+import { getSiteUrl } from "@/lib/siteUrl";
 import { solutions } from "@/data/solutions";
 
-export const SITE_URL = "https://www.climsystem.fr";
 export const SITE_NAME = "Climsystem Distribution Atlantique";
 
-const SITE_LOGO_URL = officialLogoAbsoluteUrl(SITE_URL);
+export function siteUrl(): string {
+  return getSiteUrl();
+}
+
+const siteLogoUrl = () => officialLogoAbsoluteUrl(getSiteUrl());
 
 export function buildOrganizationSchema(
   agencies: Agency[],
   featuredAgency: Agency,
 ) {
+  const base = getSiteUrl();
+  const logo = siteLogoUrl();
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "@id": `${SITE_URL}#organization`,
+    "@id": `${base}#organization`,
     name: SITE_NAME,
     alternateName: "Climsystem",
-    url: SITE_URL,
-    logo: SITE_LOGO_URL,
-    image: SITE_LOGO_URL,
+    url: base,
+    logo,
+    image: logo,
     description:
       "Distributeur indépendant en génie climatique depuis plus de 25 ans : chauffage, climatisation, ventilation et hygrométrie. Équipe à Nantes ; agences à Châtillon, Tours et Aubagne.",
     foundingDate: "2000",
@@ -60,14 +66,16 @@ export function buildOrganizationSchema(
 }
 
 export function buildLocalBusinessSchemas(agencies: Agency[]) {
+  const base = getSiteUrl();
+  const logo = siteLogoUrl();
   return agencies.map((a) => ({
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "@id": `${SITE_URL}/agences#${a.id}`,
+    "@id": `${base}/agences#${a.id}`,
     name: a.name,
-    parentOrganization: { "@id": `${SITE_URL}#organization` },
-    image: SITE_LOGO_URL,
-    url: `${SITE_URL}/agences#${a.id}`,
+    parentOrganization: { "@id": `${base}#organization` },
+    image: logo,
+    url: `${base}/agences#${a.id}`,
     telephone: a.phone,
     email: a.email,
     priceRange: "€€",
@@ -100,19 +108,23 @@ export function buildLocalBusinessSchemas(agencies: Agency[]) {
   }));
 }
 
-export const websiteSchema = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "@id": `${SITE_URL}#website`,
-  url: SITE_URL,
-  name: SITE_NAME,
-  publisher: { "@id": `${SITE_URL}#organization` },
-  inLanguage: "fr-FR",
-};
+export function websiteSchema() {
+  const base = getSiteUrl();
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${base}#website`,
+    url: base,
+    name: SITE_NAME,
+    publisher: { "@id": `${base}#organization` },
+    inLanguage: "fr-FR",
+  };
+}
 
 export function buildBreadcrumbSchema(
   items: Array<{ name: string; url: string }>,
 ) {
+  const base = getSiteUrl();
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -120,7 +132,7 @@ export function buildBreadcrumbSchema(
       "@type": "ListItem",
       position: idx + 1,
       name: item.name,
-      item: `${SITE_URL}${item.url}`,
+      item: `${base}${item.url}`,
     })),
   };
 }

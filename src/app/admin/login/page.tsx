@@ -12,6 +12,8 @@ export default async function AdminLoginPage({
   const msg =
     q.err === "auth"
       ? "Mot de passe incorrect."
+      : q.err === "rate"
+        ? "Trop de tentatives. Réessayez dans environ 15 minutes."
       : q.err === "config"
         ? "Configuration invalide. Veuillez contacter l'administrateur."
         : null;

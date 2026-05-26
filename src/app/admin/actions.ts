@@ -15,6 +15,11 @@ import {
   CMS_IMAGE_FORM_KEEP_INLINE,
   cmsImageUploadFieldName,
 } from "@/lib/admin/cmsUpload";
+import {
+  clearLoginRateLimit,
+  isLoginRateLimited,
+  recordFailedLoginAttempt,
+} from "@/lib/admin/loginRateLimit";
 
 const MAX_CMS_UPLOAD_IMAGE_BYTES = 2 * 1024 * 1024;
 
@@ -80,6 +85,10 @@ async function persistUploadedCmsImage(
 }
 
 export async function adminLoginAction(formData: FormData) {
+  if (await isLoginRateLimited()) {
+    redirect("/admin/login?err=rate");
+  }
+
   const password = formData.get("password")?.toString() ?? "";
   const rawNext = formData.get("next")?.toString() ?? "";
   const next =
@@ -95,8 +104,10 @@ export async function adminLoginAction(formData: FormData) {
     redirect("/admin/login?err=config");
   }
   if (password !== expected) {
+    await recordFailedLoginAttempt();
     redirect("/admin/login?err=auth");
   }
+  await clearLoginRateLimit();
   const token = await createAdminJwt();
   await setAdminSessionCookie(token);
   redirect(next);

@@ -1,4 +1,4 @@
-﻿# Climsystem Nantes
+# Climsystem Nantes
 
 Site web professionnel **Climsystem**, distributeur en génie climatique sur le Grand Ouest, réalisé dans le cadre d’un workshop Master 2.
 
@@ -17,31 +17,40 @@ Site web professionnel **Climsystem**, distributeur en génie climatique sur le 
 ## Déploiement sur Vercel
 
 1. Créer une base **PostgreSQL managée** (ex. [Neon](https://neon.tech), [Supabase](https://supabase.com)) et récupérer l’URI.
-2. **Vercel** — projet importé depuis **GitHub** : **Project → Settings → Environment Variables** pour **Production / Preview**. Définir au minimum :
-   - **`DATABASE_URL`**
-   - **`ADMIN_PASSWORD`**
-   - **`ADMIN_JWT_SECRET`**
-   - Facultatif : **`NEXT_PUBLIC_SITE_URL`** = URL définitive (ex. `https://www.climsystem.fr` ou `https://votre-projet.vercel.app`)
-3. **Build** : Vercel lance **`npm run build`** (install + `postinstall` → Prisma Generate). Pas de fichier `vercel.toml` nécessaire pour ce projet.
-4. **Migrations Prisma** (à faire une fois après un changement de schéma ou avant première prod) : en local, avec la même **`DATABASE_URL`** que sur Vercel :
+2. **Vercel** — **Project → Settings → Environment Variables** (Production / Preview) :
+   - **`DATABASE_URL`** — sur **Supabase**, utiliser la connexion **pooler** « Transaction » (port **6543**) pour l’app (compatible **Vercel**, souvent IPv4).
+   - **`DIRECT_URL`** — sur **Supabase**, l’URI **Direct** (`db.<ref>.supabase.co:5432`) pour les **migrations** et `prisma generate` ; l’app utilise toujours **`DATABASE_URL`**. Sur **Neon** (ou tout Postgres sans pool dédié), mets **la même** chaîne que **`DATABASE_URL`** dans **`DIRECT_URL`**.
+   - **`ADMIN_PASSWORD`**, **`ADMIN_JWT_SECRET`**
+   - **`NEXT_PUBLIC_SITE_URL`** = `https://www.climsystem-distribution-atlantique.fr` (domaine principal **www** ; utilisé pour SEO, sitemap, JSON-LD et redirection apex → www)
+3. En **local**, mets **`DATABASE_URL`** + **`DIRECT_URL`** comme dans `.env.example` (`DIRECT_URL` = connexion Direct Supabase avec ton mot de passe).
+4. **Build** sur Vercel : `npm install` → `postinstall` exécute **`prisma generate`** (qui exige désormais les deux URLs si présentes dans `schema.prisma`).
+5. **Migrations** (depuis ta machine, une fois ou après changement du dossier `prisma/migrations/`) :
 
    ```bash
    npx prisma migrate deploy
    ```
 
-   Tu peux copier **`DATABASE_URL`** depuis Vercel, ou : **`vercel env pull .env.vercel`** (nécessite CLI + `vercel link`) puis lancer migrate avec ce fichier comme env.
+   Prisma prend automatiquement **`directUrl`** pour les migrations même si **`DATABASE_URL`** pointe vers le pooler — plus de blocage sur le pooler.
 
-5. **Seed données** (une fois si la base est vide) :
+6. **Seed** :
 
    ```bash
    npx prisma db seed
    ```
 
-6. Connexion back-office : **`https://<ta-domaine>/admin/login`** (ou `https://<projet>.vercel.app/admin/login`).
+7. Connexion back-office : **`https://www.climsystem-distribution-atlantique.fr/admin/login`**.
 
-### Domaine OVH ou autre
+### Domaine OVH + Vercel
 
-**Vercel → Project → Domains** : ajouter `www.example.com` / `example.com`. Puis dans la **zone DNS** chez OVH, suivre les enregistrements indiqués par Vercel (souvent **CNAME** vers `cname.vercel-dns.com`).
+**Vercel → Project → Domains** : domaine principal **`www.climsystem-distribution-atlantique.fr`**, redirection du **apex** (`climsystem-distribution-atlantique.fr`) vers **www** (également gérée côté app via middleware si DNS configuré). Dans la **zone DNS OVH**, suivre les enregistrements indiqués par Vercel (CNAME `www` → `….vercel-dns-….com`).
+
+### Sécurité (rendu / production)
+
+- **En-têtes HTTP** (`next.config.ts`) : `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, etc. ; `/admin` en `noindex` + `no-store`.
+- **`robots.txt`** : interdit l’indexation de `/admin`.
+- **Back-office** : cookie JWT `httpOnly` + `secure` + `SameSite=Strict` ; limitation des tentatives de connexion (8 essais / 15 min).
+- **Secrets** : jamais dans Git (`.env` ignoré) ; mots de passe forts sur Vercel (`ADMIN_PASSWORD`, `ADMIN_JWT_SECRET`).
+- **Base** : accès Postgres via Supabase (pooler sur Vercel, `DIRECT_URL` pour migrations).
 
 ### Ce que permet l’admin
 

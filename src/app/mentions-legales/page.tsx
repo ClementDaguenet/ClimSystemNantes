@@ -1,6 +1,7 @@
 ﻿import type { Metadata } from "next";
 import { LegalPageLayout } from "@/components/legal/LegalPageLayout";
 import { getFeaturedAgency } from "@/lib/cms/loaders";
+import { getSiteHostLabel } from "@/lib/siteUrl";
 
 export const metadata: Metadata = {
   title: "Mentions légales",
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 
 export default async function MentionsLegalesPage() {
   const featuredAgency = await getFeaturedAgency();
+  const siteHost = getSiteHostLabel();
 
   return (
     <LegalPageLayout
@@ -23,7 +25,7 @@ export default async function MentionsLegalesPage() {
       <h2>1. Éditeur du site</h2>
       <p>
         Le présent site, accessible à l&apos;adresse{" "}
-        <strong>www.climsystem.fr</strong>, est édité par :
+        <strong>{siteHost}</strong>, est édité par :
       </p>
       <div className="definitions">
         <div>
