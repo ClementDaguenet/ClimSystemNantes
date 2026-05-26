@@ -1,4 +1,4 @@
-# Climsystem Nantes
+﻿# Climsystem Nantes
 
 Site web professionnel **Climsystem**, distributeur en génie climatique sur le Grand Ouest, réalisé dans le cadre d’un workshop Master 2.
 
@@ -17,11 +17,13 @@ Site web professionnel **Climsystem**, distributeur en génie climatique sur le 
 ## Déploiement sur Vercel
 
 1. Créer une base **PostgreSQL managée** (ex. [Neon](https://neon.tech), [Supabase](https://supabase.com)) et récupérer l’URI.
-2. **Vercel** — **Project → Settings → Environment Variables** (Production / Preview) :
-   - **`DATABASE_URL`** — sur **Supabase**, utiliser la connexion **pooler** « Transaction » (port **6543**) pour l’app (compatible **Vercel**, souvent IPv4).
-   - **`DIRECT_URL`** — sur **Supabase**, l’URI **Direct** (`db.<ref>.supabase.co:5432`) pour les **migrations** et `prisma generate` ; l’app utilise toujours **`DATABASE_URL`**. Sur **Neon** (ou tout Postgres sans pool dédié), mets **la même** chaîne que **`DATABASE_URL`** dans **`DIRECT_URL`**.
+2. **Vercel** - **Project → Settings → Environment Variables** (Production / Preview) :
+   - **`DATABASE_URL`** - sur **Supabase**, utiliser la connexion **pooler** « Transaction » (port **6543**) pour l’app (compatible **Vercel**, souvent IPv4).
+   - **`DIRECT_URL`** - sur **Supabase**, l’URI **Direct** (`db.<ref>.supabase.co:5432`) pour les **migrations** et `prisma generate` ; l’app utilise toujours **`DATABASE_URL`**. Sur **Neon** (ou tout Postgres sans pool dédié), mets **la même** chaîne que **`DATABASE_URL`** dans **`DIRECT_URL`**.
    - **`ADMIN_PASSWORD`**, **`ADMIN_JWT_SECRET`**
    - **`NEXT_PUBLIC_SITE_URL`** = `https://www.climsystem-distribution-atlantique.fr` (domaine principal **www** ; utilisé pour SEO, sitemap, JSON-LD et redirection apex → www)
+   - **`RESEND_API_KEY`**, **`CONTACT_FROM_EMAIL`**, **`CONTACT_TO_EMAIL`** - envoi du formulaire de contact
+   - **`NEXT_PUBLIC_GA_MEASUREMENT_ID`** (facultatif) - Google Analytics 4, activé uniquement après consentement cookies
 3. En **local**, mets **`DATABASE_URL`** + **`DIRECT_URL`** comme dans `.env.example` (`DIRECT_URL` = connexion Direct Supabase avec ton mot de passe).
 4. **Build** sur Vercel : `npm install` → `postinstall` exécute **`prisma generate`** (qui exige désormais les deux URLs si présentes dans `schema.prisma`).
 5. **Migrations** (depuis ta machine, une fois ou après changement du dossier `prisma/migrations/`) :
@@ -30,7 +32,7 @@ Site web professionnel **Climsystem**, distributeur en génie climatique sur le 
    npx prisma migrate deploy
    ```
 
-   Prisma prend automatiquement **`directUrl`** pour les migrations même si **`DATABASE_URL`** pointe vers le pooler — plus de blocage sur le pooler.
+   Prisma prend automatiquement **`directUrl`** pour les migrations même si **`DATABASE_URL`** pointe vers le pooler - plus de blocage sur le pooler.
 
 6. **Seed** :
 
@@ -65,6 +67,10 @@ Les **fichiers versionnés** dans `public/` (logos marques sous `public/brands/`
 npm install
 npm run build          
 npm run lint
+npm run test           # Vitest - unit + integration (~157 tests)
+npm run test:coverage  # + rapport de couverture
+npm run test:e2e       # Playwright - e2e (démarre next dev si besoin)
+npm run test:all       # Vitest + Playwright
 npm run db:migrate    # prisma migrate deploy (DATABASE_URL requis)
 npm run db:seed       # prisma db seed (DATABASE_URL requis)
 ```
@@ -99,5 +105,5 @@ Palette inspirée du logo Climsystem : bleu froid (primaire), rouge dynamique (s
 
 ## Placeholders / prolongements
 
-- Formulaire contact : envoi réel (API + mail). Aujourd’hui démo côté client.
-- Mentions légales / politique : champs à finaliser si besoin.
+- Mentions légales / politique : données légales renseignées (CLIMSYSTEM SAS) ; faire valider le directeur de publication si besoin.
+- Analytics : configurer `NEXT_PUBLIC_GA_MEASUREMENT_ID` sur Vercel pour activer GA4 après consentement.

@@ -3,6 +3,8 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { CookieConsent } from "@/components/layout/CookieConsent";
+import { Analytics } from "@/components/layout/Analytics";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
   buildOrganizationSchema,
@@ -116,6 +118,8 @@ export default async function RootLayout({
           {children}
         </main>
         <Footer />
+        <CookieConsent />
+        <Analytics />
         {organizationJsonLd ? (
           <JsonLd id="ld-organization" data={organizationJsonLd} />
         ) : null}

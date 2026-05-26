@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -18,42 +17,18 @@ import {
   Tag,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
-
-const contactSchema = z.object({
-  name: z
-    .string()
-    .min(2, "Le nom doit contenir au moins 2 caractères.")
-    .max(80, "Le nom est trop long."),
-  email: z
-    .string()
-    .min(1, "L'email est obligatoire.")
-    .email("Adresse email invalide."),
-  phone: z
-    .string()
-    .min(1, "Le téléphone est obligatoire.")
-    .regex(
-      /^(?:\+?\d[\d\s.-]{7,}\d)$/,
-      "Numéro de téléphone invalide.",
-    ),
-  subject: z.string().min(2, "Précisez le sujet de votre demande."),
-  message: z
-    .string()
-    .min(10, "Votre message doit contenir au moins 10 caractères.")
-    .max(2000, "Votre message est trop long."),
-  consent: z.literal(true, {
-    message: "Vous devez accepter le traitement de vos données.",
-  }),
-});
-
-type ContactFormData = z.infer<typeof contactSchema>;
+import { contactSchema, type ContactFormData } from "@/lib/contact/schema";
 
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
+
+type ApiErrorBody = { error?: string };
 
 export function ContactForm() {
   const searchParams = useSearchParams();
   const subjectFromUrl = searchParams.get("sujet") ?? "";
 
   const [status, setStatus] = useState<SubmitStatus>("idle");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const {
     register,
@@ -75,16 +50,31 @@ export function ContactForm() {
   });
 
   useEffect(() => {
-    if (subjectFromUrl) setValue("subject", subjectFromUrl);
+    if (subjectFromUrl) {
+      setValue("subject", subjectFromUrl, { shouldDirty: true, shouldTouch: true });
+    }
   }, [subjectFromUrl, setValue]);
 
   const onSubmit = async (data: ContactFormData) => {
     setStatus("submitting");
+    setErrorMessage(null);
     try {
-      await new Promise((r) => setTimeout(r, 900));
-      if (process.env.NODE_ENV === "development") {
-        console.info("[contact] Démo - données reçues :", data);
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, website: "" }),
+      });
+
+      if (!res.ok) {
+        const body = (await res.json().catch(() => ({}))) as ApiErrorBody;
+        setErrorMessage(
+          body.error ??
+            "Une erreur est survenue. Merci de réessayer ou de nous joindre par téléphone.",
+        );
+        setStatus("error");
+        return;
       }
+
       setStatus("success");
       reset({
         name: "",
@@ -96,6 +86,9 @@ export function ContactForm() {
       });
     } catch (err) {
       console.error("[contact] envoi impossible", err);
+      setErrorMessage(
+        "Connexion impossible. Vérifiez votre réseau ou contactez-nous par téléphone.",
+      );
       setStatus("error");
     }
   };
@@ -107,6 +100,18 @@ export function ContactForm() {
       aria-describedby="form-status"
       className="space-y-5 rounded-3xl border border-clim-blue-100 bg-white p-6 shadow-soft sm:p-10"
     >
+      {/* Honeypot anti-spam (caché des utilisateurs et lecteurs d'écran) */}
+      <div className="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+        <label htmlFor="website">Site web</label>
+        <input
+          id="website"
+          type="text"
+          name="website"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
+
       <div className="grid gap-5 sm:grid-cols-2">
         <Field
           id="name"
@@ -169,7 +174,14 @@ export function ContactForm() {
           />
           <span>
             J&apos;accepte que mes données soient utilisées pour traiter ma
-            demande, conformément à la politique de confidentialité.
+            demande, conformément à la{" "}
+            <a
+              href="/politique-confidentialite"
+              className="font-medium text-clim-blue-700 underline hover:text-clim-blue-800"
+            >
+              politique de confidentialité
+            </a>
+            .
           </span>
         </label>
         {errors.consent?.message && (
@@ -233,12 +245,10 @@ export function ContactForm() {
               className="mt-0.5 shrink-0 text-emerald-600"
             />
             <div>
-              <p className="font-semibold">Merci, votre message est bien parti (démo)</p>
+              <p className="font-semibold">Message envoyé avec succès</p>
               <p>
-                En production, cet envoi partirait vers l&apos;équipe. Pour
-                l&apos;instant le formulaire sert uniquement à valider vos
-                informations - pensez à nous appeler ou à passer par vos canaux habituels
-                pour une réponse garantie.
+                Merci pour votre demande. Notre équipe vous recontactera dans les
+                meilleurs délais, généralement sous 24 à 48 h ouvrées.
               </p>
             </div>
           </motion.div>
@@ -259,8 +269,8 @@ export function ContactForm() {
             <div>
               <p className="font-semibold">Échec de l&apos;envoi</p>
               <p>
-                Une erreur est survenue. Merci de réessayer ou de nous joindre
-                directement par téléphone à l&apos;agence la plus proche.
+                {errorMessage ??
+                  "Une erreur est survenue. Merci de réessayer ou de nous joindre directement par téléphone à l'agence la plus proche."}
               </p>
             </div>
           </motion.div>

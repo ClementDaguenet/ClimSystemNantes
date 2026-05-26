@@ -12,6 +12,10 @@
 
 # testing
 /coverage
+/playwright-report/
+/test-results/
+/blob-report/
+/playwright/.cache/
 
 # next.js
 /.next/
@@ -23,6 +27,9 @@
 # misc
 .DS_Store
 *.pem
+
+# rendus workshop (local - hors repo)
+/rendu/
 
 # debug
 npm-debug.log*
@@ -41,7 +48,7 @@ yarn-error.log*
 # vercel CLI (projets linkés localement avec `vercel link`)
 .vercel
 
-# dossier métadonnées Netlify CLI (si utilisé encore en local — optionnel à supprimer)
+# dossier métadonnées Netlify CLI (si utilisé encore en local - optionnel à supprimer)
 
 # typescript
 *.tsbuildinfo

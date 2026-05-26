@@ -1,4 +1,4 @@
-# Notes opérationnelles
+﻿# Notes opérationnelles
 
 ## Modèle PostgreSQL + Prisma
 
@@ -31,4 +31,15 @@ Contenu JSON initial dans **`content/site/`** importé via **`prisma/seed.ts`**.
 
 ## Formulaire contact
 
-Envoi encore simulé côté client ; mise en prod : route API + prestataire mail.
+Route **`POST /api/contact`** (JSON) - validation Zod, honeypot, rate-limit cookie (5 envois / h).
+
+Variables Vercel :
+- **`RESEND_API_KEY`**
+- **`CONTACT_FROM_EMAIL`** - expéditeur (domaine vérifié chez Resend)
+- **`CONTACT_TO_EMAIL`** - destinataire (ex. `contact44@climsystem.com`)
+
+## Cookies et analytics
+
+Bandeau de consentement (`CookieConsent`) - préférence stockée en `localStorage` (`clims_cookie_consent`).
+
+Google Analytics 4 chargé uniquement si l'utilisateur accepte et si **`NEXT_PUBLIC_GA_MEASUREMENT_ID`** est défini.

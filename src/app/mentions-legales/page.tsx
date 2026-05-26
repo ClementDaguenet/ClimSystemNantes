@@ -1,6 +1,12 @@
 ﻿import type { Metadata } from "next";
 import { LegalPageLayout } from "@/components/legal/LegalPageLayout";
 import { getFeaturedAgency } from "@/lib/cms/loaders";
+import {
+  DATABASE_HOSTING,
+  EMAIL_PROVIDER,
+  HOSTING,
+  LEGAL_ENTITY,
+} from "@/lib/legal/company";
 import { getSiteHostLabel } from "@/lib/siteUrl";
 
 export const metadata: Metadata = {
@@ -20,94 +26,111 @@ export default async function MentionsLegalesPage() {
       eyebrow="Informations légales"
       title="Mentions légales"
       description="Conformément aux dispositions des articles 6-III et 19 de la Loi n° 2004-575 du 21 juin 2004 pour la Confiance dans l'économie numérique (LCEN)."
-      lastUpdated="30 avril 2026"
+      lastUpdated="26 mai 2026"
     >
       <h2>1. Éditeur du site</h2>
       <p>
         Le présent site, accessible à l&apos;adresse{" "}
-        <strong>{siteHost}</strong>, est édité par :
+        <strong>{siteHost}</strong>, est édité sous l&apos;enseigne{" "}
+        <strong>{LEGAL_ENTITY.commercialName}</strong> par la société :
       </p>
       <div className="definitions">
         <div>
-          <strong>Raison sociale&nbsp;:</strong> Climsystem Distribution
-          Atlantique
+          <strong>Dénomination sociale&nbsp;:</strong> {LEGAL_ENTITY.denomination}
         </div>
         <div>
-          <strong>Forme juridique&nbsp;:</strong> [SAS / SARL - à compléter]
+          <strong>Enseigne du site&nbsp;:</strong> {LEGAL_ENTITY.commercialName}
         </div>
         <div>
-          <strong>Capital social&nbsp;:</strong> [à compléter] €
+          <strong>Forme juridique&nbsp;:</strong> {LEGAL_ENTITY.legalForm}
         </div>
         <div>
-          <strong>Siège social&nbsp;:</strong> [adresse du siège social - à
-          compléter conformément aux statuts de la société]
+          <strong>Capital social&nbsp;:</strong> {LEGAL_ENTITY.capitalSocial}&nbsp;€
         </div>
         <div>
-          <strong>Contact agence Nantes (site web)&nbsp;:</strong>{" "}
+          <strong>Siège social&nbsp;:</strong> {LEGAL_ENTITY.headquarters}
+        </div>
+        <div>
+          <strong>Agence Ouest (contact site web)&nbsp;:</strong>{" "}
           {featuredAgency.address}, {featuredAgency.postalCode}{" "}
           {featuredAgency.city}
         </div>
         <div>
-          <strong>SIRET&nbsp;:</strong> [à compléter]
+          <strong>SIREN&nbsp;:</strong> {LEGAL_ENTITY.siren}
         </div>
         <div>
-          <strong>RCS&nbsp;:</strong> [Ville d&apos;immatriculation -
-          à compléter] - [Numéro à compléter]
+          <strong>SIRET (siège)&nbsp;:</strong> {LEGAL_ENTITY.siretSiege}
         </div>
         <div>
-          <strong>N° TVA intracommunautaire&nbsp;:</strong> [FRXX XXXXXXXXX]
+          <strong>RCS&nbsp;:</strong> {LEGAL_ENTITY.rcs}
         </div>
         <div>
-          <strong>Téléphone&nbsp;:</strong>{" "}
+          <strong>N° TVA intracommunautaire&nbsp;:</strong> {LEGAL_ENTITY.tva}
+        </div>
+        <div>
+          <strong>Activité&nbsp;:</strong> {LEGAL_ENTITY.activity}
+        </div>
+        <div>
+          <strong>Code NAF/APE&nbsp;:</strong> {LEGAL_ENTITY.naf}
+        </div>
+        <div>
+          <strong>Téléphone agence Nantes&nbsp;:</strong>{" "}
           <a href={`tel:${featuredAgency.phone.replace(/\s/g, "")}`}>
             {featuredAgency.phone}
           </a>
         </div>
         <div>
-          <strong>Email&nbsp;:</strong>{" "}
+          <strong>Email agence Nantes&nbsp;:</strong>{" "}
           <a href={`mailto:${featuredAgency.email}`}>{featuredAgency.email}</a>
         </div>
         <div>
-          <strong>Directeur de la publication&nbsp;:</strong> [Nom Prénom - à
-          compléter]
+          <strong>Directeur de la publication&nbsp;:</strong>{" "}
+          {LEGAL_ENTITY.publicationDirector}
         </div>
       </div>
 
-      <h2>2. Hébergeur du site</h2>
+      <h2>2. Hébergement du site</h2>
       <p>Le site est hébergé par&nbsp;:</p>
       <div className="definitions">
         <div>
-          <strong>Hébergeur&nbsp;:</strong> Vercel Inc.
+          <strong>Hébergeur&nbsp;:</strong> {HOSTING.name}
         </div>
         <div>
-          <strong>Adresse&nbsp;:</strong> 440&nbsp;N Barranca Ave #4133 —
-          Covina, CA&nbsp;91723, États-Unis
+          <strong>Adresse&nbsp;:</strong> {HOSTING.address}
         </div>
         <div>
           <strong>Site web&nbsp;:</strong>{" "}
-          <a
-            href="https://vercel.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href={HOSTING.website} target="_blank" rel="noopener noreferrer">
             vercel.com
           </a>
         </div>
       </div>
+      <p>
+        Les contenus éditables (textes, images CMS, fiches agences) sont stockés
+        dans une base de données PostgreSQL hébergée par{" "}
+        <a
+          href={DATABASE_HOSTING.website}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {DATABASE_HOSTING.name}
+        </a>
+        .
+      </p>
 
       <h2>3. Propriété intellectuelle</h2>
       <p>
         L&apos;ensemble des éléments présents sur ce site (textes, images,
         graphismes, logo, icônes, sons, logiciels, etc.) est la propriété
-        exclusive de Climsystem Distribution Atlantique ou de ses partenaires,
-        et est protégé par les lois françaises et internationales relatives à
-        la propriété intellectuelle.
+        exclusive de {LEGAL_ENTITY.denomination} ou de ses partenaires, et est
+        protégé par les lois françaises et internationales relatives à la
+        propriété intellectuelle.
       </p>
       <p>
         Toute reproduction, représentation, modification, publication,
         adaptation de tout ou partie des éléments du site, quel que soit le
         moyen ou le procédé utilisé, est interdite sauf autorisation écrite
-        préalable de Climsystem Distribution Atlantique.
+        préalable de {LEGAL_ENTITY.denomination}.
       </p>
       <p>
         Les marques et logos des fabricants partenaires (Daikin, Mitsubishi
@@ -119,17 +142,17 @@ export default async function MentionsLegalesPage() {
       <h2>4. Liens hypertextes</h2>
       <p>
         Le site peut contenir des liens hypertextes vers d&apos;autres sites.
-        Climsystem Distribution Atlantique n&apos;exerce aucun contrôle sur ces
-        sites tiers et ne saurait être tenue responsable de leur contenu, de
-        leur disponibilité ou de l&apos;usage qui pourrait en être fait.
+        {LEGAL_ENTITY.denomination} n&apos;exerce aucun contrôle sur ces sites
+        tiers et ne saurait être tenue responsable de leur contenu, de leur
+        disponibilité ou de l&apos;usage qui pourrait en être fait.
       </p>
 
       <h2>5. Limitation de responsabilité</h2>
       <p>
-        Climsystem Distribution Atlantique met tout en œuvre pour offrir aux
-        utilisateurs des informations et/ou outils disponibles et vérifiés,
-        mais ne saurait être tenue pour responsable des erreurs ou de toute
-        absence ou indisponibilité d&apos;informations.
+        {LEGAL_ENTITY.denomination} met tout en œuvre pour offrir aux
+        utilisateurs des informations et/ou outils disponibles et vérifiés, mais
+        ne saurait être tenue pour responsable des erreurs ou de toute absence
+        ou indisponibilité d&apos;informations.
       </p>
       <p>
         Les informations diffusées sur ce site sont présentées à titre
@@ -143,6 +166,16 @@ export default async function MentionsLegalesPage() {
         Le traitement des données personnelles collectées sur ce site est
         détaillé dans notre{" "}
         <a href="/politique-confidentialite">politique de confidentialité</a>.
+        Les messages transmis via le formulaire de contact sont acheminés par
+        le prestataire{" "}
+        <a
+          href={EMAIL_PROVIDER.website}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {EMAIL_PROVIDER.name}
+        </a>
+        .
       </p>
 
       <h2>7. Droit applicable</h2>

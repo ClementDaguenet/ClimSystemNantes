@@ -7,7 +7,7 @@ datasource db {
   provider  = "postgresql"
   /** Pooler Supabase / Vercel ; pour les migrations Prisma utilise `directUrl`. */
   url       = env("DATABASE_URL")
-  /** Connexion directe `db.<ref>.supabase.co:5432` — obligatoire pour `migrate deploy` depuis la machine locale. */
+  /** Connexion directe `db.<ref>.supabase.co:5432` - obligatoire pour `migrate deploy` depuis la machine locale. */
   directUrl = env("DIRECT_URL")
 }
 

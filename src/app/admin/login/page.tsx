@@ -25,7 +25,7 @@ export default async function AdminLoginPage({
           Connexion back-office
         </h1>
         <p className="mt-2 text-sm text-slate-600">
-          Accès réservé. Veuillez contacter l'administrateur si vous n'avez pas de mot de passe.
+          Accès réservé. Veuillez contacter l&apos;administrateur si vous n&apos;avez pas de mot de passe.
         </p>
         {msg ? (
           <p
