@@ -63,7 +63,7 @@ Les **fichiers versionnés** dans `public/` (logos marques sous `public/brands/`
 
 ```bash
 npm install
-npm run build          # même commande que Vercel
+npm run build          
 npm run lint
 npm run db:migrate    # prisma migrate deploy (DATABASE_URL requis)
 npm run db:seed       # prisma db seed (DATABASE_URL requis)
