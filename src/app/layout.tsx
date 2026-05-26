@@ -1,4 +1,5 @@
 ﻿import type { Metadata, Viewport } from "next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
@@ -120,6 +121,7 @@ export default async function RootLayout({
         <Footer />
         <CookieConsent />
         <Analytics />
+        <SpeedInsights />
         {organizationJsonLd ? (
           <JsonLd id="ld-organization" data={organizationJsonLd} />
         ) : null}
