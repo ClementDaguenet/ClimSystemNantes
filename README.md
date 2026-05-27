@@ -68,7 +68,7 @@ npm install
 npm run build          
 npm run lint
 npm run test           # Vitest - unit + integration (~157 tests)
-npm run test:coverage  # + rapport de couverture
+npm run test:coverage  # rapport de couverture
 npm run test:e2e       # Playwright - e2e (démarre next dev si besoin)
 npm run test:all       # Vitest + Playwright
 npm run db:migrate    # prisma migrate deploy (DATABASE_URL requis)
