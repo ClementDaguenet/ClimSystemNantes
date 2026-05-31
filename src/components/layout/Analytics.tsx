@@ -1,12 +1,17 @@
 ﻿"use client";
 
 import { useEffect } from "react";
-import { getGaMeasurementId, hasAnalyticsConsent } from "@/lib/analytics/consent";
+import {
+  getClarityProjectId,
+  getGaMeasurementId,
+  hasAnalyticsConsent,
+} from "@/lib/analytics/consent";
 
 declare global {
   interface Window {
     dataLayer?: unknown[];
     gtag?: (...args: unknown[]) => void;
+    clarity?: ((...args: unknown[]) => void) & { q?: unknown[] };
   }
 }
 
@@ -31,14 +36,34 @@ function loadGaScript(measurementId: string) {
   document.head.appendChild(script);
 }
 
-/** Charge Google Analytics 4 uniquement si consentement accordé et ID configuré. */
+function loadClarityScript(projectId: string) {
+  if (document.querySelector(`script[data-clarity-id="${projectId}"]`)) return;
+
+  window.clarity =
+    window.clarity ||
+    function clarity(...args: unknown[]) {
+      (window.clarity!.q = window.clarity!.q || []).push(args);
+    };
+
+  const script = document.createElement("script");
+  script.async = true;
+  script.src = `https://www.clarity.ms/tag/${projectId}`;
+  script.dataset.clarityId = projectId;
+  const firstScript = document.getElementsByTagName("script")[0];
+  firstScript?.parentNode?.insertBefore(script, firstScript);
+}
+
+/** Charge GA4 et Microsoft Clarity uniquement si consentement accordé. */
 export function Analytics() {
   useEffect(() => {
     const measurementId = getGaMeasurementId();
-    if (!measurementId) return;
+    const clarityId = getClarityProjectId();
+    if (!measurementId && !clarityId) return;
 
     const maybeLoad = () => {
-      if (hasAnalyticsConsent()) loadGaScript(measurementId);
+      if (!hasAnalyticsConsent()) return;
+      if (measurementId) loadGaScript(measurementId);
+      if (clarityId) loadClarityScript(clarityId);
     };
 
     maybeLoad();

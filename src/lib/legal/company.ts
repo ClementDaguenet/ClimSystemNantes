@@ -43,3 +43,10 @@ export const ANALYTICS_PROVIDER = {
   website: "https://analytics.google.com",
   purpose: "Mesure d'audience anonymisée, uniquement après consentement",
 } as const;
+
+export const CLARITY_PROVIDER = {
+  name: "Microsoft Clarity (Microsoft Ireland Operations Limited)",
+  website: "https://clarity.microsoft.com",
+  purpose:
+    "Analyse du comportement des visiteurs (heatmaps, sessions), uniquement après consentement",
+} as const;

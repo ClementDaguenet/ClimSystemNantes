@@ -43,3 +43,5 @@ Variables Vercel :
 Bandeau de consentement (`CookieConsent`) - préférence stockée en `localStorage` (`clims_cookie_consent`).
 
 Google Analytics 4 chargé uniquement si l'utilisateur accepte et si **`NEXT_PUBLIC_GA_MEASUREMENT_ID`** est défini.
+
+Microsoft Clarity chargé uniquement si l'utilisateur accepte et si **`NEXT_PUBLIC_CLARITY_PROJECT_ID`** est défini.

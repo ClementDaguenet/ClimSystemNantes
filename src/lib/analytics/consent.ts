@@ -22,3 +22,8 @@ export function getGaMeasurementId(): string | null {
   const id = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim();
   return id && id.startsWith("G-") ? id : null;
 }
+
+export function getClarityProjectId(): string | null {
+  const id = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID?.trim();
+  return id || null;
+}

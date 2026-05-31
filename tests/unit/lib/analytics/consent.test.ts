@@ -2,6 +2,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import {
   CONSENT_STORAGE_KEY,
+  getClarityProjectId,
   getGaMeasurementId,
   hasAnalyticsConsent,
   readConsent,
@@ -72,6 +73,22 @@ describe("lib/analytics/consent", () => {
     it("trim les espaces autour de l'ID GA4", () => {
       vi.stubEnv("NEXT_PUBLIC_GA_MEASUREMENT_ID", "  G-TRIM123  ");
       expect(getGaMeasurementId()).toBe("G-TRIM123");
+    });
+  });
+
+  describe("getClarityProjectId", () => {
+    it("retourne null sans variable env", () => {
+      expect(getClarityProjectId()).toBeNull();
+    });
+
+    it("retourne l'ID Clarity configuré", () => {
+      vi.stubEnv("NEXT_PUBLIC_CLARITY_PROJECT_ID", "wx9l5uefvg");
+      expect(getClarityProjectId()).toBe("wx9l5uefvg");
+    });
+
+    it("trim les espaces autour de l'ID", () => {
+      vi.stubEnv("NEXT_PUBLIC_CLARITY_PROJECT_ID", "  abc123  ");
+      expect(getClarityProjectId()).toBe("abc123");
     });
   });
 });

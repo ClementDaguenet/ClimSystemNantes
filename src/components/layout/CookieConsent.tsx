@@ -61,8 +61,9 @@ export function CookieConsent() {
               className="mt-1 text-sm text-clim-muted"
             >
               Nous utilisons des cookies strictement nécessaires au fonctionnement
-              du site. Avec votre accord, Google Analytics mesure la fréquentation
-              de façon anonymisée. Refuser n&apos;empêche pas la navigation.{" "}
+              du site. Avec votre accord, Google Analytics et Microsoft Clarity
+              mesurent la fréquentation et l&apos;usage du site de façon
+              anonymisée. Refuser n&apos;empêche pas la navigation.{" "}
               <Link
                 href="/politique-confidentialite"
                 className="font-medium text-clim-blue-700 underline hover:text-clim-blue-800"

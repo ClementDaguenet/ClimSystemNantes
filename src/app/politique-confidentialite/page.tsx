@@ -3,6 +3,7 @@ import { LegalPageLayout } from "@/components/legal/LegalPageLayout";
 import { getFeaturedAgency } from "@/lib/cms/loaders";
 import {
   ANALYTICS_PROVIDER,
+  CLARITY_PROVIDER,
   DATABASE_HOSTING,
   EMAIL_PROVIDER,
   HOSTING,
@@ -99,9 +100,11 @@ export default async function PolitiqueConfidentialitePage() {
       <p>
         Si vous acceptez les cookies de mesure d&apos;audience via le bandeau
         affiché lors de votre première visite,{" "}
-        <strong>{ANALYTICS_PROVIDER.name}</strong> peut collecter des données
+        <strong>{ANALYTICS_PROVIDER.name}</strong> et{" "}
+        <strong>{CLARITY_PROVIDER.name}</strong> peuvent collecter des données
         anonymisées (pages consultées, durée de visite, type d&apos;appareil,
-        origine géographique approximative). L&apos;adresse IP est anonymisée.
+        interactions avec la page). L&apos;adresse IP est anonymisée chez
+        Google Analytics.
       </p>
       <p>
         <strong>Finalité&nbsp;:</strong> comprendre l&apos;usage du site et
@@ -113,11 +116,15 @@ export default async function PolitiqueConfidentialitePage() {
         navigation.
       </p>
       <p>
-        Si la variable{" "}
+        Si les variables{" "}
         <code className="rounded bg-clim-blue-50 px-1.5 py-0.5 text-sm">
           NEXT_PUBLIC_GA_MEASUREMENT_ID
         </code>{" "}
-        n&apos;est pas configurée sur le serveur, aucun outil de mesure
+        et{" "}
+        <code className="rounded bg-clim-blue-50 px-1.5 py-0.5 text-sm">
+          NEXT_PUBLIC_CLARITY_PROJECT_ID
+        </code>{" "}
+        ne sont pas configurées sur le serveur, aucun outil de mesure
         d&apos;audience n&apos;est chargé.
       </p>
 
@@ -213,6 +220,18 @@ export default async function PolitiqueConfidentialitePage() {
           </a>
           )
         </li>
+        <li>
+          <strong>{CLARITY_PROVIDER.name}</strong> - analyse comportementale,
+          uniquement si vous avez accepté les cookies (
+          <a
+            href={CLARITY_PROVIDER.website}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            clarity.microsoft.com
+          </a>
+          )
+        </li>
       </ul>
       <p>
         Certains sous-traitants peuvent être établis hors Union européenne
@@ -236,8 +255,9 @@ export default async function PolitiqueConfidentialitePage() {
 
       <h3>5.2. Cookies de mesure d&apos;audience (avec consentement)</h3>
       <p>
-        Si vous cliquez sur «&nbsp;Accepter&nbsp;», Google Analytics 4 peut
-        déposer des cookies (_ga, _ga_*). Vous pouvez retirer votre
+        Si vous cliquez sur «&nbsp;Accepter&nbsp;», Google Analytics 4 et
+        Microsoft Clarity peuvent déposer des cookies ou technologies
+        équivalentes (_ga, _ga_*, _clck, _clsk…). Vous pouvez retirer votre
         consentement en effaçant les données du site dans les paramètres de
         votre navigateur.
       </p>
