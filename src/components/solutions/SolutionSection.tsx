@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { Check } from "lucide-react";
 import Image from "next/image";
@@ -106,10 +106,7 @@ export function SolutionSection({
                   fill
                   sizes="(max-width: 1024px) 100vw, 48vw"
                   className="object-cover"
-                  unoptimized={
-                    /^https?:\/\//i.test(imageSrc.trim()) ||
-                    imageSrc.trim().startsWith("data:image/")
-                  }
+                  unoptimized={/^https?:\/\//i.test(imageSrc.trim())}
                 />
               </div>
             ) : (

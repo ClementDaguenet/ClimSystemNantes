@@ -1,4 +1,4 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
 
 /* Leaflet tiles & marker styles (chargé globalement pour la page /agences) */
 @import "leaflet/dist/leaflet.css";
@@ -141,6 +141,28 @@ html {
 }
 @media (prefers-reduced-motion: reduce) {
   .animate-hero-shimmer {
+    animation: none;
+  }
+}
+
+/* Entrée du Hero en CSS pur (et non via JS/Framer Motion) : le contenu au-dessus
+   de la ligne de flottaison est peint dès le premier rendu serveur, sans attendre
+   l'hydratation. Indispensable pour un bon LCP. `both` conserve l'état final visible. */
+@keyframes clim-rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.clim-rise {
+  animation: clim-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .clim-rise {
     animation: none;
   }
 }

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useRef } from "react";
 import Image from "next/image";
@@ -50,12 +50,6 @@ export function Hero({
   const blobY2 = useTransform(scrollYProgress, [0, 1], [0, 80]);
   const blobY3 = useTransform(scrollYProgress, [0, 1], [0, -40]);
 
-  const fade = (delay = 0) => ({
-    initial: prefersReducedMotion ? false : { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] as const },
-  });
-
   return (
     <section
       ref={sectionRef}
@@ -84,35 +78,34 @@ export function Hero({
       <Container className="relative py-20 sm:py-28 lg:py-36">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div>
-            <motion.span
-              {...fade(0)}
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest backdrop-blur"
+            <span
+              className="clim-rise inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest backdrop-blur"
             >
               <Sparkles size={14} aria-hidden="true" className="text-clim-red-400" />
               {copy.badge}
-            </motion.span>
+            </span>
 
-            <motion.h1
+            <h1
               id="hero-title"
-              {...fade(0.1)}
-              className="mt-6 text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl"
+              className="clim-rise mt-6 text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl"
+              style={{ animationDelay: "0.08s" }}
             >
               {copy.h1Lead}{" "}
               <span className="animate-hero-shimmer bg-gradient-to-r from-clim-red-400 via-white to-clim-red-400 bg-clip-text text-transparent">
                 {copy.h1Highlight}
               </span>
-            </motion.h1>
+            </h1>
 
-            <motion.p
-              {...fade(0.2)}
-              className="mt-6 max-w-xl text-lg text-clim-blue-50/90 sm:text-xl"
+            <p
+              className="clim-rise mt-6 max-w-xl text-lg text-clim-blue-50/90 sm:text-xl"
+              style={{ animationDelay: "0.16s" }}
             >
               {copy.subtitle}
-            </motion.p>
+            </p>
 
-            <motion.div
-              {...fade(0.3)}
-              className="mt-8 flex flex-col gap-3 sm:flex-row"
+            <div
+              className="clim-rise mt-8 flex flex-col gap-3 sm:flex-row"
+              style={{ animationDelay: "0.24s" }}
             >
               <Button href="/solutions" variant="primary" size="lg">
                 {copy.ctaPrimary}
@@ -126,11 +119,11 @@ export function Hero({
               >
                 {copy.ctaSecondary}
               </Button>
-            </motion.div>
+            </div>
 
-            <motion.dl
-              {...fade(0.4)}
-              className="mt-12 grid grid-cols-3 gap-6 border-t border-white/20 pt-8"
+            <dl
+              className="clim-rise mt-12 grid grid-cols-3 gap-6 border-t border-white/20 pt-8"
+              style={{ animationDelay: "0.32s" }}
             >
               {[
                 { value: 25, suffix: "+", label: copy.statYearsLabel },
@@ -154,12 +147,12 @@ export function Hero({
                   </dd>
                 </div>
               ))}
-            </motion.dl>
+            </dl>
           </div>
 
-          <motion.div
-            {...fade(0.3)}
-            className="relative hidden lg:block"
+          <div
+            className="clim-rise relative hidden lg:block"
+            style={{ animationDelay: "0.2s" }}
             aria-hidden="true"
           >
             <div className="relative ml-auto aspect-square w-full max-w-lg">
@@ -172,10 +165,7 @@ export function Hero({
                     sizes="(max-width: 1024px) 0vw, 36vw"
                     className="object-cover"
                     priority
-                    unoptimized={
-                      /^https?:\/\//i.test(heroImageSrc) ||
-                      heroImageSrc.startsWith("data:image/")
-                    }
+                    unoptimized={/^https?:\/\//i.test(heroImageSrc)}
                   />
                 </div>
               ) : (
@@ -227,7 +217,7 @@ export function Hero({
                 </>
               )}
             </div>
-          </motion.div>
+          </div>
         </div>
       </Container>
     </section>

@@ -7,6 +7,7 @@ import { BrandsCarousel } from "@/components/home/BrandsCarousel";
 import { CtaBanner } from "@/components/home/CtaBanner";
 import { NantesSpotlight } from "@/components/home/NantesSpotlight";
 import { getContents } from "@/lib/cms/content";
+import { cmsImageDeliveryUrl } from "@/lib/cms/mediaUrl";
 import { getAgencies, getFeaturedAgency } from "@/lib/cms/loaders";
 import { HOME_CONTENT_KEYS } from "@/lib/cms/homeContentKeys";
 
@@ -20,7 +21,10 @@ export default async function HomePage() {
 
   const c = await getContents([...HOME_CONTENT_KEYS]);
 
-  const heroImageUrl = c["media.hero.image_url"].trim();
+  const heroImageUrl = cmsImageDeliveryUrl(
+    "media.hero.image_url",
+    c["media.hero.image_url"],
+  );
   const heroImageAlt = c["media.hero.image_alt"].trim();
 
   return (
@@ -38,7 +42,7 @@ export default async function HomePage() {
           statImplantsLabel: c["hero.stat_implants"],
           statBrandsLabel: c["hero.stat_brands"],
         }}
-        heroImageSrc={heroImageUrl || undefined}
+        heroImageSrc={heroImageUrl}
         heroImageAlt={heroImageAlt}
       />
       <Presentation

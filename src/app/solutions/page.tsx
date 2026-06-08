@@ -7,6 +7,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { solutions } from "@/data/solutions";
 import { buildBreadcrumbSchema } from "@/lib/seo";
 import { getContents } from "@/lib/cms/content";
+import { cmsImageDeliveryUrl } from "@/lib/cms/mediaUrl";
 
 export const metadata: Metadata = {
   title: "Nos solutions techniques",
@@ -66,14 +67,14 @@ export default async function SolutionsPage() {
       {solutions.map((sol, idx) => {
         const urlKey = `media.solutions.${sol.slug}.image_url` as const;
         const altKey = `media.solutions.${sol.slug}.image_alt` as const;
-        const rawUrl = c[urlKey]?.trim() ?? "";
+        const imageSrc = cmsImageDeliveryUrl(urlKey, c[urlKey]);
         const rawAlt = c[altKey]?.trim() ?? "";
         return (
           <SolutionSection
             key={sol.id}
             slug={sol.slug}
             reverse={idx % 2 === 1}
-            imageSrc={rawUrl || undefined}
+            imageSrc={imageSrc}
             imageAlt={rawAlt || undefined}
           />
         );
