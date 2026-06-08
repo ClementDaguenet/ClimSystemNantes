@@ -102,47 +102,43 @@ html {
   font-family: inherit;
 }
 
-/* Pulsation très douce pour les badges "Siège social" / éléments mis en avant.
-   Discrète : 4s, opacity légère, désactivée par prefers-reduced-motion. */
+/* Pulsation des badges "Siège social" via un pseudo-élément animé en transform +
+   opacity (composé par le GPU), au lieu d'un box-shadow animé (non composé, coûteux
+   pour le thread principal). Halo rouge qui s'étend doucement derrière le badge. */
 @keyframes hq-pulse {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgb(225 29 46 / 0.45);
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
   }
-  50% {
-    box-shadow: 0 0 0 10px rgb(225 29 46 / 0);
+  70%,
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
   }
 }
 .animate-hq-pulse {
+  isolation: isolate;
+}
+.animate-hq-pulse::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--color-clim-red-500);
+  z-index: -1;
   animation: hq-pulse 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 @media (prefers-reduced-motion: reduce) {
-  .animate-hq-pulse {
+  .animate-hq-pulse::before {
     animation: none;
+    opacity: 0;
   }
 }
 
-/* Shimmer subtil sur le gradient du titre Hero - anime la position du gradient
-   pour un léger effet de reflet. Désactivé en reduced-motion. */
-@keyframes hero-shimmer {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
+/* Titre Hero : dégradé statique. L'ancienne animation de `background-position`
+   n'était pas composée et tournait en continu au-dessus de la ligne de flottaison. */
 .animate-hero-shimmer {
-  background-size: 200% 100%;
-  animation: hero-shimmer 6s ease-in-out infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  .animate-hero-shimmer {
-    animation: none;
-  }
+  background-size: 100% 100%;
 }
 
 /* Entrée du Hero en CSS pur (et non via JS/Framer Motion) : le contenu au-dessus
