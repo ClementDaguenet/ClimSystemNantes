@@ -15,6 +15,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
+/** Année de création de Climsystem : les « X+ années d'expertise » en sont déduites. */
+const FOUNDING_YEAR = 2001;
+
 export default async function HomePage() {
   const agencies = await getAgencies();
   const featured = await getFeaturedAgency();
@@ -31,6 +34,7 @@ export default async function HomePage() {
     <>
       <Hero
         implantationCount={agencies.length}
+        yearsCount={new Date().getFullYear() - FOUNDING_YEAR}
         copy={{
           badge: c["hero.badge"],
           h1Lead: c["hero.h1_lead"],

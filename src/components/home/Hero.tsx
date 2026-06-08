@@ -27,6 +27,8 @@ export type HeroCopy = {
 
 type HeroProps = {
   implantationCount: number;
+  /** Nombre d'années d'expertise (calculé depuis l'année de création). */
+  yearsCount: number;
   copy: HeroCopy;
   /** Chemin /public/… ou URL HTTPS - si absent, affiche le visuel géométrique par défaut */
   heroImageSrc?: string;
@@ -35,6 +37,7 @@ type HeroProps = {
 
 export function Hero({
   implantationCount,
+  yearsCount,
   copy,
   heroImageSrc,
   heroImageAlt,
@@ -126,7 +129,7 @@ export function Hero({
               style={{ animationDelay: "0.32s" }}
             >
               {[
-                { value: 25, suffix: "+", label: copy.statYearsLabel },
+                { value: yearsCount, suffix: "+", label: copy.statYearsLabel },
                 {
                   value: implantationCount,
                   suffix: "",

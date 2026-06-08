@@ -25,10 +25,16 @@ export function AnimatedCounter({
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
   const prefersReducedMotion = useReducedMotion();
-  const [value, setValue] = useState(prefersReducedMotion ? to : 0);
+  const [value, setValue] = useState(0);
 
   useEffect(() => {
-    if (!isInView || prefersReducedMotion) return;
+    // Préférence « réduire les animations » (ou résolution tardive de la valeur) :
+    // on affiche directement la valeur finale, sinon le compteur resterait bloqué à 0.
+    if (prefersReducedMotion) {
+      setValue(to);
+      return;
+    }
+    if (!isInView) return;
 
     const controls = animate(0, to, {
       duration,
