@@ -1,4 +1,4 @@
-﻿import Image from "next/image";
+import Image from "next/image";
 import {
   LOGO_WHITE_SRC,
   OFFICIAL_LOGO_ASPECT,
@@ -30,7 +30,7 @@ export function Logo({
       width={w}
       height={h}
       priority={priority}
-      sizes="(max-width: 768px) min(90vw, 220px) min(20vw, 280px)"
+      sizes="(max-width: 768px) 220px, 280px"
       className={cn("h-auto w-auto object-contain", className)}
       style={{ height: h, width: "auto", maxWidth: "100%" }}
     />

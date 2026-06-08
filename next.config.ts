@@ -1,4 +1,4 @@
-﻿import type { NextConfig } from "next";
+import type { NextConfig } from "next";
 
 const securityHeaders = [
   { key: "X-Frame-Options", value: "DENY" },
@@ -13,6 +13,10 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["127.0.0.1"],
+  /** Tree-shaking agressif des grosses libs : moins de JS inutilisé envoyé au client. */
+  experimental: {
+    optimizePackageImports: ["framer-motion", "lucide-react"],
+  },
   async headers() {
     return [
       {

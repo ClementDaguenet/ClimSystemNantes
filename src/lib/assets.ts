@@ -1,8 +1,8 @@
-﻿export const OFFICIAL_LOGO_PATH = "/logo.png";
+export const OFFICIAL_LOGO_PATH = "/logo.png";
 export const OFFICIAL_LOGO_SRC = OFFICIAL_LOGO_PATH;
 
-export const OFFICIAL_LOGO_WIDTH = 7086;
-export const OFFICIAL_LOGO_HEIGHT = 1646;
+export const OFFICIAL_LOGO_WIDTH = 1024;
+export const OFFICIAL_LOGO_HEIGHT = 237;
 export const OFFICIAL_LOGO_ASPECT =
   OFFICIAL_LOGO_WIDTH / OFFICIAL_LOGO_HEIGHT;
 

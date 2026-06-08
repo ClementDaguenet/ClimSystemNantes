@@ -1,4 +1,4 @@
-﻿import type { Metadata, Viewport } from "next";
+import type { Metadata, Viewport } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Geist } from "next/font/google";
 import "./globals.css";
@@ -91,7 +91,13 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export const dynamic = "force-dynamic";
+/**
+ * Rendu statique + revalidation à la demande : les pages publiques sont mises en cache
+ * (TTFB quasi instantané, plus de requête DB par visite). Les modifications du back-office
+ * rafraîchissent le cache via `revalidatePath(...)` dans `src/app/admin/actions.ts`.
+ * Le segment `/admin` reste dynamique grâce à son propre `force-dynamic`.
+ */
+export const revalidate = 3600;
 
 export default async function RootLayout({
   children,

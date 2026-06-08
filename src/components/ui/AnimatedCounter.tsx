@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useRef, useState } from "react";
 import {
@@ -44,7 +44,7 @@ export function AnimatedCounter({
   });
 
   return (
-    <span ref={ref} className={className} aria-label={`${to}${suffix}`}>
+    <span ref={ref} className={className} role="img" aria-label={`${to}${suffix}`}>
       <span aria-hidden="true">
         {formatted}
         {suffix}
