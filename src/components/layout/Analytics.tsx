@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect } from "react";
 import {
@@ -19,9 +19,13 @@ function loadGaScript(measurementId: string) {
   if (document.querySelector(`script[data-ga-id="${measurementId}"]`)) return;
 
   window.dataLayer = window.dataLayer ?? [];
-  window.gtag = function gtag(...args: unknown[]) {
-    window.dataLayer?.push(args);
-  };
+  // gtag.js attend l'objet `arguments` (et NON un Array) dans dataLayer ; sinon les
+  // commandes `config`/`js` ne sont pas interprétées et GA4 ne reçoit aucune donnée.
+  function gtag() {
+    // eslint-disable-next-line prefer-rest-params
+    window.dataLayer!.push(arguments);
+  }
+  window.gtag = gtag;
   window.gtag("js", new Date());
   window.gtag("config", measurementId, {
     anonymize_ip: true,
