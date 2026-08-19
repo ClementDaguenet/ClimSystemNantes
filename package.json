@@ -37,7 +37,9 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy",
     "db:push": "prisma db push",
-    "db:seed": "prisma db seed"
+    "db:seed": "prisma db seed",
+    "db:export-prod": "tsx prisma/export-prod.ts",
+    "db:import-prod": "tsx prisma/import-prod.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

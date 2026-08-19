@@ -59,3 +59,6 @@ next-env.d.ts
 # Fichiers ignorés Git (anciens téléversements test ; éviter commits accidentels).
 /public/uploads/**
 !/public/uploads/.gitkeep
+
+# Dump CMS prod (data-URL / contenus édités) — ne pas versionner
+/tmp/

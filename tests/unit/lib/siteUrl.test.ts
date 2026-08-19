@@ -1,10 +1,11 @@
-﻿import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import {
   DEFAULT_SITE_URL,
   getApexHost,
   getSiteHost,
   getSiteHostLabel,
   getSiteUrl,
+  getWwwHost,
 } from "@/lib/siteUrl";
 
 describe("lib/siteUrl", () => {
@@ -15,13 +16,8 @@ describe("lib/siteUrl", () => {
     });
 
     it("normalise une URL avec trailing slash", () => {
-      vi.stubEnv(
-        "NEXT_PUBLIC_SITE_URL",
-        "https://www.climsystem-distribution-atlantique.fr/",
-      );
-      expect(getSiteUrl()).toBe(
-        "https://www.climsystem-distribution-atlantique.fr",
-      );
+      vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://climsystem.com/");
+      expect(getSiteUrl()).toBe("https://climsystem.com");
     });
 
     it("accepte une URL avec chemin et retourne l'origine", () => {
@@ -38,20 +34,15 @@ describe("lib/siteUrl", () => {
     });
 
     it("trim les espaces autour de l'URL", () => {
-      vi.stubEnv(
-        "NEXT_PUBLIC_SITE_URL",
-        "  https://www.climsystem-distribution-atlantique.fr  ",
-      );
-      expect(getSiteUrl()).toBe(
-        "https://www.climsystem-distribution-atlantique.fr",
-      );
+      vi.stubEnv("NEXT_PUBLIC_SITE_URL", "  https://climsystem.com  ");
+      expect(getSiteUrl()).toBe("https://climsystem.com");
     });
   });
 
   describe("getSiteHost", () => {
-    it("extrait le host www", () => {
+    it("extrait l'hôte apex par défaut", () => {
       vi.stubEnv("NEXT_PUBLIC_SITE_URL", "");
-      expect(getSiteHost()).toBe("www.climsystem-distribution-atlantique.fr");
+      expect(getSiteHost()).toBe("climsystem.com");
     });
 
     it("extrait le host d'un domaine custom", () => {
@@ -61,14 +52,26 @@ describe("lib/siteUrl", () => {
   });
 
   describe("getApexHost", () => {
-    it("retourne l'apex sans www pour le domaine canonique", () => {
+    it("retourne null si le canonique est déjà l'apex", () => {
       vi.stubEnv("NEXT_PUBLIC_SITE_URL", "");
-      expect(getApexHost()).toBe("climsystem-distribution-atlantique.fr");
+      expect(getApexHost()).toBeNull();
     });
 
-    it("retourne null si le host ne commence pas par www.", () => {
-      vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://example.com");
-      expect(getApexHost()).toBeNull();
+    it("retourne l'apex si l'URL canonique commence par www.", () => {
+      vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://www.climsystem.com");
+      expect(getApexHost()).toBe("climsystem.com");
+    });
+  });
+
+  describe("getWwwHost", () => {
+    it("préfixe www quand le canonique est l'apex", () => {
+      vi.stubEnv("NEXT_PUBLIC_SITE_URL", "");
+      expect(getWwwHost()).toBe("www.climsystem.com");
+    });
+
+    it("retourne le host tel quel s'il est déjà www", () => {
+      vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://www.example.com");
+      expect(getWwwHost()).toBe("www.example.com");
     });
   });
 
@@ -80,8 +83,8 @@ describe("lib/siteUrl", () => {
   });
 
   describe("DEFAULT_SITE_URL", () => {
-    it("utilise https et le sous-domaine www", () => {
-      expect(DEFAULT_SITE_URL).toMatch(/^https:\/\/www\./);
+    it("utilise https sans sous-domaine www", () => {
+      expect(DEFAULT_SITE_URL).toBe("https://climsystem.com");
     });
   });
 });

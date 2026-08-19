@@ -192,7 +192,7 @@ export default async function PolitiqueConfidentialitePage() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            supabase.com
+            ovhcloud.com
           </a>
           )
         </li>

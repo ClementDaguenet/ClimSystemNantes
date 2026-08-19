@@ -34,7 +34,7 @@ describe("lib/seo", () => {
 
     it("référence l'URL canonique du site", () => {
       const schema = buildOrganizationSchema(allAgenciesFixture, agencyNantes);
-      expect(schema.url).toContain("climsystem-distribution-atlantique.fr");
+      expect(schema.url).toContain("climsystem.com");
     });
 
     it("inclut logo et image absolus", () => {
@@ -105,7 +105,7 @@ describe("lib/seo", () => {
         { name: "Solutions", url: "/solutions" },
       ]);
       expect(schema.itemListElement[0].item).toMatch(
-        /^https:\/\/www\.climsystem-distribution-atlantique\.fr\/solutions$/,
+        /^https:\/\/climsystem\.com\/solutions$/,
       );
     });
   });

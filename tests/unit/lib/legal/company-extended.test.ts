@@ -36,8 +36,8 @@ describe("lib/legal/company - conformité", () => {
       expect(HOSTING.website).toContain("vercel.com");
     });
 
-    it("base de données = Supabase", () => {
-      expect(DATABASE_HOSTING.name).toMatch(/Supabase/);
+    it("base de données = OVHcloud", () => {
+      expect(DATABASE_HOSTING.name).toMatch(/OVH/);
     });
 
     it("email = Resend", () => {

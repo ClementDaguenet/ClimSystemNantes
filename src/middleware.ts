@@ -2,14 +2,19 @@
 import type { NextRequest } from "next/server";
 import { verifyAdminToken } from "@/lib/admin/jwt";
 import { ADMIN_COOKIE_NAME } from "@/lib/admin/constants";
-import { getApexHost, getSiteHost } from "@/lib/siteUrl";
+import { getApexHost, getSiteHost, getWwwHost } from "@/lib/siteUrl";
 
 export async function middleware(request: NextRequest) {
   const host = request.headers.get("host")?.split(":")[0] ?? "";
   const apex = getApexHost();
   const canonicalHost = getSiteHost();
+  const wwwHost = getWwwHost();
 
-  if (apex && host === apex) {
+  const isAlias =
+    (apex && host === apex) ||
+    (wwwHost !== canonicalHost && host === wwwHost);
+
+  if (isAlias) {
     const url = request.nextUrl.clone();
     url.protocol = request.nextUrl.protocol;
     url.host = canonicalHost;

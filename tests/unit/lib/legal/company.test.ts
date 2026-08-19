@@ -45,8 +45,8 @@ describe("lib/legal/company", () => {
       expect(HOSTING.name).toContain("Vercel");
     });
 
-    it("base de données = Supabase", () => {
-      expect(DATABASE_HOSTING.name).toContain("Supabase");
+    it("base de données = OVHcloud", () => {
+      expect(DATABASE_HOSTING.name).toContain("OVH");
     });
 
     it("email = Resend", () => {

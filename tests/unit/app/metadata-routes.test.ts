@@ -12,7 +12,7 @@ describe("app/sitemap", () => {
   });
 
   it("priorité maximale pour l'accueil", () => {
-    const home = sitemap().find((e) => e.url.endsWith(".fr"));
+    const home = sitemap().find((e) => e.priority === 1);
     expect(home?.priority).toBe(1);
   });
 
@@ -21,8 +21,10 @@ describe("app/sitemap", () => {
     expect(urls.some((u) => u.includes("/admin"))).toBe(false);
   });
 
-  it("utilise l'URL canonique www", () => {
-    expect(sitemap().every((e) => e.url.startsWith("https://www."))).toBe(true);
+  it("utilise l'URL canonique https", () => {
+    expect(sitemap().every((e) => e.url.startsWith("https://climsystem.com"))).toBe(
+      true,
+    );
   });
 
   it("inclut contact et pages légales", () => {

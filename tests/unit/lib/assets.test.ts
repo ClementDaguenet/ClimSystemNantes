@@ -9,16 +9,16 @@ describe("lib/assets", () => {
   describe("officialLogoAbsoluteUrl", () => {
     it("construit une URL absolue vers logo.png", () => {
       const url = officialLogoAbsoluteUrl(
-        "https://www.climsystem-distribution-atlantique.fr",
+        "https://climsystem.com",
       );
       expect(url).toBe(
-        "https://www.climsystem-distribution-atlantique.fr/logo.png",
+        "https://climsystem.com/logo.png",
       );
     });
 
     it("supprime le slash final du siteUrl", () => {
       const url = officialLogoAbsoluteUrl(
-        "https://www.climsystem-distribution-atlantique.fr/",
+        "https://climsystem.com/",
       );
       expect(url).toContain("/logo.png");
       expect(url).not.toContain("//logo");

@@ -27,8 +27,8 @@ export const HOSTING = {
 } as const;
 
 export const DATABASE_HOSTING = {
-  name: "Supabase Inc. (PostgreSQL managé)",
-  website: "https://supabase.com",
+  name: "OVHcloud (PostgreSQL)",
+  website: "https://www.ovhcloud.com",
   purpose: "Base de données du CMS et des contenus éditables",
 } as const;
 
